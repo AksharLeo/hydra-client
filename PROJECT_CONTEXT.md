@@ -104,6 +104,7 @@ Fork of the official [Hydra Launcher](https://github.com/hydralauncher/hydra) mo
 ## Current State
 
 ### Working
+
 - Client builds and runs (`npm run dev`)
 - Game catalogue display and live search suggestions (via upstream proxy)
 - UI rendering, navigation, settings
@@ -112,17 +113,20 @@ Fork of the official [Hydra Launcher](https://github.com/hydralauncher/hydra) mo
 - WebSocket connection (verified end-to-end, realtime auth works)
 
 ### Partially Working
+
 - Authentication (account creation works, full auth flow unverified)
 - Game detail pages (some crash on missing/malformed API responses)
 - Download source sync (routes exist, behavior untested)
 
 ### Not Implemented / Disabled
+
 - Cloud save operations
 - Achievement synchronization
 - Friends/social features (gracefully disabled via backend stubs)
 - Game artwork cloud sync
 
 ### Known Issues
+
 - Subscription bypass is an uncommitted change — could be lost on reset
 - No `origin` remote — cannot push changes to a personal fork
 - Some upstream-proxied endpoints may fail if they require upstream auth

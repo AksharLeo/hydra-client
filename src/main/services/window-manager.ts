@@ -636,7 +636,10 @@ export class WindowManager {
     });
   }
 
-  public static async openAuthWindow(page: AuthPage, searchParams: URLSearchParams) {
+  public static async openAuthWindow(
+    page: AuthPage,
+    searchParams: URLSearchParams
+  ) {
     const parentWindow =
       this.bigPicture && !this.bigPicture.isDestroyed()
         ? this.bigPicture
@@ -647,7 +650,9 @@ export class WindowManager {
     let authBaseUrl = import.meta.env.MAIN_VITE_AUTH_URL;
     try {
       const { db, levelKeys } = await import("@main/level");
-      const prefs = (await db.get(levelKeys.userPreferences, { valueEncoding: "json" })) as any;
+      const prefs = (await db.get(levelKeys.userPreferences, {
+        valueEncoding: "json",
+      })) as any;
       if (prefs?.serverType === "local") {
         authBaseUrl = "http://localhost:3001/auth/page";
       } else if (prefs?.serverType === "custom" && prefs?.customBackendUrl) {

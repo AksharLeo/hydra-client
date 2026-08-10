@@ -148,11 +148,13 @@ export class HydraApi {
 
   static async setupApi() {
     let baseURL = import.meta.env.MAIN_VITE_API_URL;
-    
+
     try {
       const { db, levelKeys } = await import("@main/level");
-      const prefs = await db.get(levelKeys.userPreferences, { valueEncoding: "json" }) as any;
-      
+      const prefs = (await db.get(levelKeys.userPreferences, {
+        valueEncoding: "json",
+      })) as any;
+
       if (prefs?.serverType === "local") {
         baseURL = "http://localhost:3001";
       } else if (prefs?.serverType === "custom" && prefs?.customBackendUrl) {

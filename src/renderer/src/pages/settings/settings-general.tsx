@@ -475,7 +475,11 @@ export function SettingsGeneral() {
           setNeedsRestart(true);
         }}
         options={[
-          { key: "official", value: "official", label: "Official Hydra Server" },
+          {
+            key: "official",
+            value: "official",
+            label: "Official Hydra Server",
+          },
           { key: "local", value: "local", label: "Local Server (localhost)" },
           { key: "custom", value: "custom", label: "Custom Server" },
         ]}

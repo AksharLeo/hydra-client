@@ -126,6 +126,7 @@ Use the repository's actual tooling:
 Never claim a check passed unless it was actually run.
 
 When integration with the backend is incomplete, distinguish:
+
 - **verified working** — tested and confirmed
 - **partially working** — some functionality works
 - **not implemented** — code does not exist yet
@@ -135,9 +136,11 @@ When integration with the backend is incomplete, distinguish:
 ## Change Scope
 
 Always:
+
 - Implement new features or significant custom changes as separate modules in distinct files. Avoid heavy in-line modifications to existing upstream files whenever possible to minimize merge conflicts with future upstream releases.
 
 Do not:
+
 - Perform unrelated refactors.
 - Rewrite working architecture without reason.
 - Modify unrelated files.

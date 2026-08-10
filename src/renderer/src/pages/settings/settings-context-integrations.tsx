@@ -9,8 +9,10 @@ import { useAppSelector } from "@renderer/hooks";
 export function SettingsContextIntegrations() {
   const { t } = useTranslation("settings");
   const { updateUserPreferences } = useContext(settingsContext);
-  const userPreferences = useAppSelector((state) => state.userPreferences.value);
-  
+  const userPreferences = useAppSelector(
+    (state) => state.userPreferences.value
+  );
+
   const [needsRestart, setNeedsRestart] = useState(false);
   const [form, setForm] = useState({
     serverType: "official" as "official" | "local" | "custom",
@@ -64,7 +66,11 @@ export function SettingsContextIntegrations() {
             setNeedsRestart(true);
           }}
           options={[
-            { key: "official", value: "official", label: "Official Hydra Server" },
+            {
+              key: "official",
+              value: "official",
+              label: "Official Hydra Server",
+            },
             { key: "local", value: "local", label: "Local Server (localhost)" },
             { key: "custom", value: "custom", label: "Custom Server" },
           ]}

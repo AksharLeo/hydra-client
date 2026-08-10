@@ -1,5 +1,5 @@
 import { appVersion, defaultDownloadsPath, isStaging } from "@main/constants";
-import { ipcMain } from "electron";
+import { ipcMain, app } from "electron";
 
 import "./auth";
 import "./autoupdater";
@@ -34,3 +34,7 @@ ipcMain.handle("getDefaultDownloadsPath", () => defaultDownloadsPath);
 ipcMain.handle("getCloudIframeUrl", () =>
   new URL("/cloud", import.meta.env.MAIN_VITE_CHECKOUT_URL).toString()
 );
+ipcMain.handle("restartApp", () => {
+  app.relaunch();
+  app.exit();
+});

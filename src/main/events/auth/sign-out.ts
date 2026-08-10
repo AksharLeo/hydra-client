@@ -12,6 +12,9 @@ import {
   downloadLayoutStateSublevel,
   downloadsSublevel,
   gamesSublevel,
+  gamesShopAssetsSublevel,
+  gamesShopCacheSublevel,
+  gamesStatsCacheSublevel,
   levelKeys,
 } from "@main/level";
 
@@ -37,6 +40,9 @@ const signOut = async (_event: Electron.IpcMainInvokeEvent) => {
         gamesSublevel.clear(),
         downloadsSublevel.clear(),
         downloadLayoutStateSublevel.clear(),
+        gamesShopAssetsSublevel.clear(),
+        gamesShopCacheSublevel.clear(),
+        gamesStatsCacheSublevel.clear(),
         emulators.resetEmulatorScanData(),
       ]);
     });
@@ -45,6 +51,7 @@ const signOut = async (_event: Electron.IpcMainInvokeEvent) => {
   DownloadManager.cancelDownload();
 
   await HydraApi.handleSignOut();
+  await HydraApi.setupApi();
 
   /* The friends window is only meaningful while signed in */
   WindowManager.closeFriendsWindow();

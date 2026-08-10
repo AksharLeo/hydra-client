@@ -244,20 +244,29 @@ const mergeRemoteGame = async (
     await syncArtworkSelectionWithRemote(gameKey, localGame, remoteGame);
   }
 
-  const localGameShopAsset = await gamesShopAssetsSublevel.get(gameKey);
+  const localGameShopAsset = await gamesShopAssetsSublevel.get(gameKey).catch(() => null);
+
+  // If both remote and local are missing artwork, try fetching from the Hydra resources API (via our proxy)
+  if (!remoteGame.libraryHeroImageUrl && !localGameShopAsset?.libraryHeroImageUrl && remoteGame.shop !== "custom") {
+    const { getGameAssets } = await import("../../events/catalogue/get-game-assets");
+    await getGameAssets(remoteGame.objectId, remoteGame.shop as any).catch(() => {});
+  }
+
+  const updatedLocalGameShopAsset = await gamesShopAssetsSublevel.get(gameKey).catch(() => null);
+
   await gamesShopAssetsSublevel.put(gameKey, {
     updatedAt: Date.now(),
-    ...localGameShopAsset,
+    ...updatedLocalGameShopAsset,
     shop: remoteGame.shop,
     objectId: remoteGame.objectId,
-    title: localGame?.title || remoteGame.title,
-    coverImageUrl: getRemoteCoverImageUrl(remoteGame),
-    libraryHeroImageUrl: remoteGame.libraryHeroImageUrl,
-    libraryImageUrl: remoteGame.libraryImageUrl,
-    logoImageUrl: remoteGame.logoImageUrl,
-    iconUrl: remoteGame.iconUrl,
-    logoPosition: remoteGame.logoPosition,
-    downloadSources: remoteGame.downloadSources,
+    title: localGame?.title || (remoteGame.title !== "Unknown Game" ? remoteGame.title : null) || updatedLocalGameShopAsset?.title || "Unknown Game",
+    coverImageUrl: getRemoteCoverImageUrl(remoteGame) ?? updatedLocalGameShopAsset?.coverImageUrl,
+    libraryHeroImageUrl: remoteGame.libraryHeroImageUrl ?? updatedLocalGameShopAsset?.libraryHeroImageUrl,
+    libraryImageUrl: remoteGame.libraryImageUrl ?? updatedLocalGameShopAsset?.libraryImageUrl,
+    logoImageUrl: remoteGame.logoImageUrl ?? updatedLocalGameShopAsset?.logoImageUrl,
+    iconUrl: remoteGame.iconUrl ?? updatedLocalGameShopAsset?.iconUrl,
+    logoPosition: remoteGame.logoPosition ?? updatedLocalGameShopAsset?.logoPosition,
+    downloadSources: remoteGame.downloadSources ?? updatedLocalGameShopAsset?.downloadSources,
   });
 };
 

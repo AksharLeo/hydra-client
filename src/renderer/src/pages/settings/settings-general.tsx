@@ -64,12 +64,15 @@ export function SettingsGeneral() {
       "top-left" as AchievementCustomNotificationPosition,
     achievementSoundVolume: 15,
     language: "",
+    serverType: "official" as "official" | "local" | "custom",
+    customBackendUrl: "",
     customStyles: window.localStorage.getItem("customStyles") || "",
   });
 
   const [languageOptions, setLanguageOptions] = useState<LanguageOption[]>([]);
 
   const [defaultDownloadsPath, setDefaultDownloadsPath] = useState("");
+  const [needsRestart, setNeedsRestart] = useState(false);
   const [downloadDirectoryReplacement, setDownloadDirectoryReplacement] =
     useState<DownloadDirectoryReplacementState | null>(null);
 
@@ -145,6 +148,8 @@ export function SettingsGeneral() {
         friendStartGameNotificationsEnabled:
           userPreferences.friendStartGameNotificationsEnabled ?? true,
         language: language ?? "en",
+        serverType: userPreferences.serverType ?? "official",
+        customBackendUrl: userPreferences.customBackendUrl ?? "",
       }));
     }
   }, [userPreferences, defaultDownloadsPath]);
@@ -454,6 +459,53 @@ export function SettingsGeneral() {
           ? t("installing_common_redist")
           : t("install_common_redist")}
       </Button>
+
+      <h2 className="settings-general__section-title">Server Connection</h2>
+      <p className="settings-general__common-redist-description">
+        Choose which server Hydra connects to for game data and accounts.
+      </p>
+
+      <SelectField
+        label="Server Type"
+        value={form.serverType}
+        onChange={(e) => {
+          const val = e.target.value as "official" | "local" | "custom";
+          setForm((prev) => ({ ...prev, serverType: val }));
+          updateUserPreferences({ serverType: val });
+          setNeedsRestart(true);
+        }}
+        options={[
+          { key: "official", value: "official", label: "Official Hydra Server" },
+          { key: "local", value: "local", label: "Local Server (localhost)" },
+          { key: "custom", value: "custom", label: "Custom Server" },
+        ]}
+      />
+
+      {form.serverType === "custom" && (
+        <TextField
+          label="Custom Server URL"
+          placeholder="http://your-server.com"
+          value={form.customBackendUrl}
+          onChange={(e) => {
+            const val = e.target.value;
+            setForm((prev) => ({ ...prev, customBackendUrl: val }));
+          }}
+          onBlur={(e) => {
+            updateUserPreferences({ customBackendUrl: e.target.value });
+            setNeedsRestart(true);
+          }}
+        />
+      )}
+
+      {needsRestart && (
+        <Button
+          theme="primary"
+          onClick={() => window.electron.restartApp()}
+          style={{ marginTop: 16 }}
+        >
+          Restart App to Apply Server Changes
+        </Button>
+      )}
 
       <DownloadDirectoryReplacementModal
         visible={downloadDirectoryReplacement !== null}

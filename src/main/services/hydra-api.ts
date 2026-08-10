@@ -4,7 +4,7 @@ import url from "url";
 import { uploadGamesBatch } from "./library-sync";
 import { clearGamesRemoteIds } from "./library-sync/clear-games-remote-id";
 import { networkLogger as logger } from "./logger";
-import { UserNotLoggedInError, SubscriptionRequiredError } from "@shared";
+import { UserNotLoggedInError /*, SubscriptionRequiredError*/ } from "@shared";
 import { appVersion } from "@main/constants";
 import { getUserData } from "./user/get-user-data";
 import { db } from "@main/level";
@@ -147,8 +147,23 @@ export class HydraApi {
   }
 
   static async setupApi() {
+    let baseURL = import.meta.env.MAIN_VITE_API_URL;
+    
+    try {
+      const { db, levelKeys } = await import("@main/level");
+      const prefs = await db.get(levelKeys.userPreferences, { valueEncoding: "json" }) as any;
+      
+      if (prefs?.serverType === "local") {
+        baseURL = "http://localhost:3001";
+      } else if (prefs?.serverType === "custom" && prefs?.customBackendUrl) {
+        baseURL = prefs.customBackendUrl;
+      }
+    } catch (err) {
+      // Ignore missing preferences
+    }
+
     this.instance = axios.create({
-      baseURL: import.meta.env.MAIN_VITE_API_URL,
+      baseURL,
       headers: { "User-Agent": `Hydra Launcher v${appVersion}` },
     });
 
@@ -343,32 +358,33 @@ export class HydraApi {
 
   private static async validateOptions(options?: HydraApiOptions) {
     const needsAuth = options?.needsAuth == undefined || options.needsAuth;
-    const needsSubscription = options?.needsSubscription === true;
+    // const needsSubscription = options?.needsSubscription === true;
 
     if (needsAuth) {
       if (!this.isLoggedIn()) throw new UserNotLoggedInError();
       await this.revalidateAccessTokenIfExpired();
     }
 
-    if (needsSubscription && !this.hasActiveSubscription()) {
-      await this.refreshUserSubscription();
-
-      if (!this.hasActiveSubscription()) {
-        throw new SubscriptionRequiredError();
-      }
-    }
+    // Self-hosted: all cloud features are free, skip subscription check
+    // if (needsSubscription && !this.hasActiveSubscription()) {
+    //   await this.refreshUserSubscription();
+    //
+    //   if (!this.hasActiveSubscription()) {
+    //     throw new SubscriptionRequiredError();
+    //   }
+    // }
   }
 
-  private static async refreshUserSubscription() {
-    if (!this.isLoggedIn()) return;
-
-    try {
-      const userDetails = await getUserData();
-      if (userDetails) this.updateUserSubscription(userDetails.subscription);
-    } catch (err) {
-      logger.error("Failed to refresh subscription state", err);
-    }
-  }
+  // private static async refreshUserSubscription() {
+  //   if (!this.isLoggedIn()) return;
+  //
+  //   try {
+  //     const userDetails = await getUserData();
+  //     if (userDetails) this.updateUserSubscription(userDetails.subscription);
+  //   } catch (err) {
+  //     logger.error("Failed to refresh subscription state", err);
+  //   }
+  // }
 
   static async get<T = any>(
     url: string,

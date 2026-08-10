@@ -636,7 +636,7 @@ export class WindowManager {
     });
   }
 
-  public static openAuthWindow(page: AuthPage, searchParams: URLSearchParams) {
+  public static async openAuthWindow(page: AuthPage, searchParams: URLSearchParams) {
     const parentWindow =
       this.bigPicture && !this.bigPicture.isDestroyed()
         ? this.bigPicture
@@ -644,7 +644,18 @@ export class WindowManager {
 
     if (!parentWindow || parentWindow.isDestroyed()) return;
 
-    const authUrl = `${import.meta.env.MAIN_VITE_AUTH_URL}${page}?${searchParams.toString()}`;
+    let authBaseUrl = import.meta.env.MAIN_VITE_AUTH_URL;
+    try {
+      const { db, levelKeys } = await import("@main/level");
+      const prefs = (await db.get(levelKeys.userPreferences, { valueEncoding: "json" })) as any;
+      if (prefs?.serverType === "local") {
+        authBaseUrl = "http://localhost:3001/auth/page";
+      } else if (prefs?.serverType === "custom" && prefs?.customBackendUrl) {
+        authBaseUrl = `${prefs.customBackendUrl}/auth/page`;
+      }
+    } catch (err) {}
+
+    const authUrl = `${authBaseUrl}${page}?${searchParams.toString()}`;
 
     if (process.platform === "linux") {
       this.openLinuxAuthWindow(parentWindow, authUrl);

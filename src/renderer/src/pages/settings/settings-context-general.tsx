@@ -52,6 +52,7 @@ export function SettingsContextGeneral({
   const [languageOptions, setLanguageOptions] = useState<LanguageOption[]>([]);
   const [defaultDownloadsPath, setDefaultDownloadsPath] = useState("");
   const [showRunAtStartup, setShowRunAtStartup] = useState(false);
+  const [needsRestart, setNeedsRestart] = useState(false);
   const [downloadDirectoryReplacement, setDownloadDirectoryReplacement] =
     useState<DownloadDirectoryReplacementState | null>(null);
 

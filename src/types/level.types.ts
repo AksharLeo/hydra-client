@@ -133,6 +133,8 @@ export interface DownloadDirectoryPreference {
 }
 
 export interface UserPreferences {
+  serverType?: "official" | "local" | "custom";
+  customBackendUrl?: string | null;
   downloadsPath?: string | null;
   defaultWinePrefixPath?: string | null;
   downloadDirectories?: DownloadDirectoryPreference[];

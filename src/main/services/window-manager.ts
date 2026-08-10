@@ -658,7 +658,9 @@ export class WindowManager {
       } else if (prefs?.serverType === "custom" && prefs?.customBackendUrl) {
         authBaseUrl = `${prefs.customBackendUrl}/auth/page`;
       }
-    } catch (err) {}
+    } catch (err) {
+      logger.error("Failed to read user preferences for auth window URL", err);
+    }
 
     const authUrl = `${authBaseUrl}${page}?${searchParams.toString()}`;
 

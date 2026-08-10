@@ -11,9 +11,9 @@ Fork of the official [Hydra Launcher](https://github.com/hydralauncher/hydra) mo
 - **Current branch**: `develop`
 - **Local branches**: `develop` (only)
 - **Remotes**:
+  - `origin` → `https://github.com/AksharLeo/hydra-client.git` (fetch and push)
   - `upstream` → `https://github.com/hydralauncher/hydra.git` (fetch and push)
-- **No `origin` remote** — this repository does not have its own remote fork. Only the official upstream is configured.
-- **HEAD**: `develop` tracks `upstream/main` (same commit: `ebfe3bd14`)
+- **HEAD**: `develop` tracks `origin/develop` and `upstream/main`
 
 ### Branch Strategy
 
@@ -37,17 +37,24 @@ Fork of the official [Hydra Launcher](https://github.com/hydralauncher/hydra) mo
 - **Status**: Uncommitted working tree change (the only modification to tracked files).
 - **Backend relation**: Required — the self-hosted backend always returns `hasActiveSubscription: true` and a fake subscription object.
 
-### 2. Environment Configuration
+### 2. Dynamic Server Configuration (UI)
 
-- **What**: `.env` file points API/auth URLs to the self-hosted backend (`localhost:3001`), while keeping catalogue/assets URLs pointing to official Hydra CDN (`assets.hydralauncher.gg`).
+- **What**: Added a **Server Connection** setting in the **Settings > Integrations** tab. Users can seamlessly switch between **Official**, **Local** (`http://localhost:3001`), and **Custom** (user-provided URL) backends.
+- **Where**: `src/renderer/src/pages/settings/integrations/server-connection.tsx` and `src/main/services/hydra-api.ts`.
+- **Why**: Allows users to connect to self-hosted backends without editing `.env` files. The backend handles auth, profiles, library sync, and cloud saves. Game catalogue data and static assets still come from the official Hydra infrastructure via the frontend `MAIN_VITE_EXTERNAL_RESOURCES_URL` (or are proxied through the custom backend).
+- **How it works**: When changed, the client signs out, dynamically reconfigures `HydraApi.setupApi()` with the new target URL from LevelDB, and soft-reloads the window.
+
+### 3. Environment Configuration (Default Fallback)
+
+- **What**: The `.env` file must still be present and contain the official Hydra URLs. It serves as the baseline fallback for the UI server connection setting (e.g. when "Official Server" is selected, or for downloading assets/catalogue data not covered by the custom backend).
 - **Where**: `.env` (untracked file, not committed)
-- **Why**: The backend handles auth, profiles, library sync, cloud saves. Game catalogue data, static assets, and download sources still come from the official Hydra infrastructure.
-- **Key variables**:
-  - `MAIN_VITE_API_URL=http://localhost:3001` — all HydraApi calls go here
-  - `MAIN_VITE_AUTH_URL=http://localhost:3001/auth/page` — auth window opens here
-  - `MAIN_VITE_CHECKOUT_URL=http://localhost:3001` — checkout (no-op, subscriptions bypassed)
-  - `MAIN_VITE_EXTERNAL_RESOURCES_URL=https://assets.hydralauncher.gg` — game assets CDN
-  - `RENDERER_VITE_EXTERNAL_RESOURCES_URL=https://assets.hydralauncher.gg` — renderer assets CDN
+- **Required Baseline Variables**:
+  - `MAIN_VITE_API_URL=https://hydra-api-us-east-1.losbroxas.org`
+  - `MAIN_VITE_AUTH_URL=https://auth.hydralauncher.gg`
+  - `MAIN_VITE_CHECKOUT_URL=https://checkout.hydralauncher.gg`
+  - `MAIN_VITE_EXTERNAL_RESOURCES_URL=https://assets.hydralauncher.gg`
+  - `RENDERER_VITE_EXTERNAL_RESOURCES_URL=https://assets.hydralauncher.gg`
+  - `MAIN_VITE_WS_URL=wss://ws.hydralauncher.gg`
 
 ## Backend Integration
 
@@ -59,8 +66,6 @@ Fork of the official [Hydra Launcher](https://github.com/hydralauncher/hydra) mo
 
 ### What Partially Works
 
-- **Authentication flow**: Account creation and login work. Deep link redirect (`hydralauncher://auth?payload=...`) successfully passes credentials to the client.
-- **Game detail pages**: Some pages may crash on malformed upstream API responses, though catalogue proxying generally works.
 - **Download sources**: Routes are proxied to upstream API.
 
 ### Not Implemented / Disabled
@@ -68,7 +73,6 @@ Fork of the official [Hydra Launcher](https://github.com/hydralauncher/hydra) mo
 - **Friends system**: Backend returns empty arrays for friends lists and requests (`/profile/friends`, `/profile/friend-requests`) so the client gracefully disables the feature instead of logging out.
 - **Game reviews**: Proxied to upstream, which requires upstream auth — will likely fail.
 - **Notifications (SSE)**: Backend stubs `/profile/notifications/count` to return `0`.
-- **Cloud saves end-to-end**: Backend has upload/download routes, but full flow with client is untested.
 - **Achievement sync end-to-end**: Backend has routes, but full flow with client is untested.
 - **Game artwork cloud sync**: Backend has no artwork storage endpoints.
 
@@ -108,19 +112,18 @@ Fork of the official [Hydra Launcher](https://github.com/hydralauncher/hydra) mo
 - Client builds and runs (`npm run dev`)
 - Game catalogue display and live search suggestions (via upstream proxy)
 - UI rendering, navigation, settings
-- Account registration and login on self-hosted backend
+- Account registration and login on self-hosted backend (Supports Email & Username)
 - Library batch sync (verified end-to-end)
 - WebSocket connection (verified end-to-end, realtime auth works)
+- Cloud save operations via snapshot blobs (verified end-to-end)
 
 ### Partially Working
 
-- Authentication (account creation works, full auth flow unverified)
 - Game detail pages (some crash on missing/malformed API responses)
 - Download source sync (routes exist, behavior untested)
 
 ### Not Implemented / Disabled
 
-- Cloud save operations
 - Achievement synchronization
 - Friends/social features (gracefully disabled via backend stubs)
 - Game artwork cloud sync
@@ -128,23 +131,19 @@ Fork of the official [Hydra Launcher](https://github.com/hydralauncher/hydra) mo
 ### Known Issues
 
 - Subscription bypass is an uncommitted change — could be lost on reset
-- No `origin` remote — cannot push changes to a personal fork
 - Some upstream-proxied endpoints may fail if they require upstream auth
 
 ## Important Decisions
 
 1. **Subscription bypass via commenting out** — simplest approach, minimal diff, easy to maintain across upstream merges.
-2. **Split URL strategy** — API/auth to self-hosted backend, catalogue/assets to official Hydra CDN. This avoids needing to replicate the entire game catalogue.
-3. **No origin remote** — repository only has `upstream`. An `origin` should be added when the user sets up their own Git remote.
-4. **Strict Upstream Compatibility** — The client payloads (e.g., library sync missing game titles) were explicitly left unmodified to maintain 100% adherence to the official Hydra API schema. The backend fetches missing data (like game titles) directly from the official CDN in the background instead.
-5. **Smart Asset Merging** — The `merge-with-remote-games.ts` handles missing metadata (like `"Unknown Game"`) by falling back to locally cached upstream metadata to repair broken backend responses seamlessly.
+2. **Dynamic UI Server Strategy** — Instead of requiring users to edit `.env` files, the client supports dynamically setting the target backend URL via the Integrations UI.
+3. **Strict Upstream Compatibility** — The client payloads (e.g., library sync missing game titles) were explicitly left unmodified to maintain 100% adherence to the official Hydra API schema. The backend fetches missing data (like game titles) directly from the official CDN in the background instead.
+4. **Smart Asset Merging** — The `merge-with-remote-games.ts` handles missing metadata (like `"Unknown Game"`) by falling back to locally cached upstream metadata to repair broken backend responses seamlessly.
 
 ## Constraints
 
-- The `.env` file must not be committed (contains local URLs).
 - The subscription bypass in `hydra-api.ts` must be preserved across upstream merges.
 - Environment variables must match the names declared in `vite-env.d.ts` files.
-- The `MAIN_VITE_AUTH_URL` must point to the backend's auth page base path (e.g., `http://localhost:3001/auth/page`), because the client appends `AuthPage` enum values and `?lng=` params.
 
 ## Development
 

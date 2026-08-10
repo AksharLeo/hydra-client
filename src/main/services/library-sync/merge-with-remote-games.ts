@@ -278,17 +278,25 @@ const mergeRemoteGame = async (
       "Unknown Game",
     coverImageUrl:
       getRemoteCoverImageUrl(remoteGame) ??
-      updatedLocalGameShopAsset?.coverImageUrl,
+      updatedLocalGameShopAsset?.coverImageUrl ??
+      null,
     libraryHeroImageUrl:
       remoteGame.libraryHeroImageUrl ??
-      updatedLocalGameShopAsset?.libraryHeroImageUrl,
+      updatedLocalGameShopAsset?.libraryHeroImageUrl ??
+      null,
     libraryImageUrl:
-      remoteGame.libraryImageUrl ?? updatedLocalGameShopAsset?.libraryImageUrl,
+      remoteGame.libraryImageUrl ??
+      updatedLocalGameShopAsset?.libraryImageUrl ??
+      null,
     logoImageUrl:
-      remoteGame.logoImageUrl ?? updatedLocalGameShopAsset?.logoImageUrl,
-    iconUrl: remoteGame.iconUrl ?? updatedLocalGameShopAsset?.iconUrl,
+      remoteGame.logoImageUrl ??
+      updatedLocalGameShopAsset?.logoImageUrl ??
+      null,
+    iconUrl: remoteGame.iconUrl ?? updatedLocalGameShopAsset?.iconUrl ?? null,
     logoPosition:
-      remoteGame.logoPosition ?? updatedLocalGameShopAsset?.logoPosition,
+      remoteGame.logoPosition ??
+      updatedLocalGameShopAsset?.logoPosition ??
+      null,
     downloadSources:
       remoteGame.downloadSources ?? updatedLocalGameShopAsset?.downloadSources,
   });

@@ -50,14 +50,14 @@ Fork of the official [Hydra Launcher](https://github.com/hydralauncher/hydra) mo
 - **Where**: `src/renderer/src/pages/settings/settings-behavior.tsx` and `src/big-picture/src/components/pages/game/game-settings-modal/danger-zone-tab.tsx`.
 - **Backend relation**: Required — the self-hosted backend handles `visibility: 'hidden'` logic.
 
-### 4. Automated Release Workflow
+### 5. Automated Release Workflow
 
-- **What**: Added a GitHub Actions workflow to automatically build binaries for Linux and Windows and upload them to release tags. `snap` target is explicitly configured to `provider: github` to bypass hardcoded Ubuntu SnapStore publishing crashes.
+- **What**: Added a GitHub Actions workflow to automatically build binaries for Linux and Windows and upload them to release tags. The `snap` build target was explicitly removed to bypass hardcoded Ubuntu SnapStore publishing crashes when building on custom forks without credentials.
 - **Where**: `.github/workflows/release.yml` and `electron-builder.yml`
 
 ### 6. App Rebranding (Conflict Prevention)
 
-- **What**: The app's name, display name, protocol scheme, and Application User Model ID have been completely changed to prevent overlap with the official Hydra launcher.
+- **What**: The app's name, display name, protocol scheme, and Application User Model ID have been completely changed to **Hydra Self-Hosted** to prevent overlap with the official Hydra launcher.
 - **Where**: `package.json`, `electron-builder.yml`, `src/main/index.ts`, etc.
 - **Why**: Allows users to run both the official client and this self-hosted fork simultaneously on the same machine without shared state conflicts (different AppData folders).
 
@@ -72,6 +72,18 @@ Fork of the official [Hydra Launcher](https://github.com/hydralauncher/hydra) mo
   - `MAIN_VITE_EXTERNAL_RESOURCES_URL=https://assets.hydralauncher.gg`
   - `RENDERER_VITE_EXTERNAL_RESOURCES_URL=https://assets.hydralauncher.gg`
   - `MAIN_VITE_WS_URL=wss://ws.hydralauncher.gg`
+
+### 8. Cloud Save Idempotency Patch
+
+- **What**: Patched `markCloudSaveRemoteDeletionStarted` to be explicitly idempotent.
+- **Where**: `src/main/services/cloud-save/pending-deletion.ts`
+- **Why**: The official client would crash if a cloud save deletion failed mid-flight (e.g. 404 error) and left the LevelDB state in `"remote-started"`, permanently bricking cloud saves for that game. The client now intelligently resumes deletion.
+
+### 9. WebSocket IPv6 Bypass
+
+- **What**: The client dynamically derives the WebSocket URL straight from the base API URL instead of trusting the backend's provided URL.
+- **Where**: `src/main/services/sse/sse-client.ts`
+- **Why**: The official upstream code blindly connects to the URL provided by the backend. If Node 18+ resolves `localhost` to `::1` (IPv6) but the backend binds to `0.0.0.0` (IPv4), the WebSocket fails. The client now correctly formats the connection dynamically.
 
 ## Backend Integration
 
@@ -132,8 +144,8 @@ Fork of the official [Hydra Launcher](https://github.com/hydralauncher/hydra) mo
 - Account registration and login on self-hosted backend (Supports Email & Username)
 - Library batch sync (verified end-to-end)
 - Library organization (hiding games, custom collections) synced with backend
-- WebSocket connection (verified end-to-end, realtime auth works)
-- Cloud save operations via snapshot blobs (verified end-to-end)
+- WebSocket connection (verified end-to-end, IPv6/IPv4 binding robust via client derivation)
+- Cloud save operations via snapshot blobs (upload, download, idempotent delete verified end-to-end)
 
 ### Partially Working
 

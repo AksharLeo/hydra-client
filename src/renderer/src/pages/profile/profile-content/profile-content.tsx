@@ -451,7 +451,9 @@ export function ProfileContent() {
             {((userProfile?.friends?.length ?? 0) > 0 || isMe) && (
               <ProfileSection
                 title={t("friends")}
-                count={userStats?.friendsCount || userProfile.friends?.length || 0}
+                count={
+                  userStats?.friendsCount || userProfile.friends?.length || 0
+                }
                 action={<FriendsBoxAddButton />}
                 defaultOpen={true}
               >

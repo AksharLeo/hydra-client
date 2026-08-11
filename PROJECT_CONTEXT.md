@@ -114,6 +114,7 @@ Fork of the official [Hydra Launcher](https://github.com/hydralauncher/hydra) mo
 - UI rendering, navigation, settings
 - Account registration and login on self-hosted backend (Supports Email & Username)
 - Library batch sync (verified end-to-end)
+- Library organization (hiding games, custom collections) synced with backend
 - WebSocket connection (verified end-to-end, realtime auth works)
 - Cloud save operations via snapshot blobs (verified end-to-end)
 

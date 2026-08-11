@@ -22,7 +22,12 @@ import {
 import type { LibraryCategory } from "@renderer/pages/library/category-filter";
 import type { SortOption } from "@renderer/pages/library/filter-options";
 
-import { PlayIcon, VideoIcon, EyeIcon, EyeClosedIcon } from "@primer/octicons-react";
+import {
+  PlayIcon,
+  VideoIcon,
+  EyeIcon,
+  EyeClosedIcon,
+} from "@primer/octicons-react";
 import { Tooltip } from "react-tooltip";
 import deckyIcon from "@renderer/assets/icons/decky.png";
 import cn from "classnames";
@@ -52,7 +57,9 @@ const initialSidebarWidth = window.localStorage.getItem("sidebarWidth");
 export function Sidebar() {
   const { t } = useTranslation(["sidebar", "library"]);
   const { library, updateLibrary } = useLibrary();
-  const showHiddenGames = useAppSelector((state) => state.library.showHiddenGames);
+  const showHiddenGames = useAppSelector(
+    (state) => state.library.showHiddenGames
+  );
   const dispatch = useAppDispatch();
   const [deckyPluginInfo, setDeckyPluginInfo] = useState<{
     installed: boolean;
@@ -493,7 +500,11 @@ export function Sidebar() {
                 data-tooltip-content={t("show_hidden_games")}
                 data-tooltip-place="top"
               >
-                {showHiddenGames ? <EyeIcon size={16} /> : <EyeClosedIcon size={16} />}
+                {showHiddenGames ? (
+                  <EyeIcon size={16} />
+                ) : (
+                  <EyeClosedIcon size={16} />
+                )}
               </button>
 
               <Tooltip id="sidebar-show-playable-only-tooltip" place="top" />

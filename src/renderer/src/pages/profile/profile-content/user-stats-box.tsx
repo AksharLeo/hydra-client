@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useContext } from "react";
 import { userProfileContext } from "@renderer/context";
 import { useTranslation } from "react-i18next";
 import { useFormat, useUserDetails, useLibrary } from "@renderer/hooks";
@@ -15,6 +15,7 @@ export function UserStatsBox() {
   const { userDetails } = useUserDetails();
   const { t } = useTranslation("user_profile");
   const { numberFormatter } = useFormat();
+  const { library } = useLibrary();
 
   const formatPlayTime = useCallback(
     (playTimeInSeconds: number) => {
@@ -38,10 +39,9 @@ export function UserStatsBox() {
   const karma = isMe ? userDetails?.karma : userProfile?.karma;
   const hasKarma = karma !== undefined && karma !== null;
 
-  const { library } = useLibrary();
-
   const localAchievementSum = library.reduce(
-    (acc, game) => acc + (game.isHidden ? 0 : game.unlockedAchievementCount ?? 0),
+    (acc, game) =>
+      acc + (game.isHidden ? 0 : (game.unlockedAchievementCount ?? 0)),
     0
   );
 
@@ -60,8 +60,7 @@ export function UserStatsBox() {
             {displayAchievementSum !== undefined ? (
               <div className="user-stats__stats-row">
                 <p className="user-stats__list-description">
-                  <TrophyIcon /> {displayAchievementSum}{" "}
-                  {t("achievements")}
+                  <TrophyIcon /> {displayAchievementSum} {t("achievements")}
                 </p>
               </div>
             ) : (

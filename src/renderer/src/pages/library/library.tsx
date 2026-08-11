@@ -304,7 +304,9 @@ export default function Library() {
     [library, sortBy]
   );
 
-  const showHiddenGames = useAppSelector((state) => state.library.showHiddenGames);
+  const showHiddenGames = useAppSelector(
+    (state) => state.library.showHiddenGames
+  );
 
   const filteredLibrary = useMemo(() => {
     let filtered = sortedLibrary;
@@ -381,7 +383,9 @@ export default function Library() {
   }, [library]);
 
   const favoritesCount = useMemo(() => {
-    return library.filter((game) => game.favorite && (showHiddenGames || !game.isHidden)).length;
+    return library.filter(
+      (game) => game.favorite && (showHiddenGames || !game.isHidden)
+    ).length;
   }, [library, showHiddenGames]);
 
   const libraryCollections = useMemo<GameCollection[]>(() => {
@@ -499,10 +503,20 @@ export default function Library() {
                 <div className="library-view-options__options">
                   <button
                     className={`library-view-options__option ${showHiddenGames ? "active" : ""}`}
-                    onClick={() => dispatch(setShowHiddenGames(!showHiddenGames))}
-                    title={showHiddenGames ? t("hide_hidden_games", "Hide hidden games") : t("show_hidden_games", "Show hidden games")}
+                    onClick={() =>
+                      dispatch(setShowHiddenGames(!showHiddenGames))
+                    }
+                    title={
+                      showHiddenGames
+                        ? t("hide_hidden_games", "Hide hidden games")
+                        : t("show_hidden_games", "Show hidden games")
+                    }
                   >
-                    {showHiddenGames ? <EyeIcon size={16} /> : <EyeClosedIcon size={16} />}
+                    {showHiddenGames ? (
+                      <EyeIcon size={16} />
+                    ) : (
+                      <EyeClosedIcon size={16} />
+                    )}
                   </button>
                 </div>
               </div>

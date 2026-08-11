@@ -153,9 +153,9 @@ export function getLibraryFilterCounts(
   library: LibraryGame[],
   showHiddenGames: boolean
 ): LibraryFilterCounts {
-  const visibleLibrary = showHiddenGames 
-    ? library 
-    : library.filter(game => !game.isHidden);
+  const visibleLibrary = showHiddenGames
+    ? library
+    : library.filter((game) => !game.isHidden);
 
   return {
     all: visibleLibrary.length,

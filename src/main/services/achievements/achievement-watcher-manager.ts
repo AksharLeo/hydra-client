@@ -236,7 +236,7 @@ export class AchievementWatcherManager {
       }
     }
 
-    let newAchievements: number;
+    let newAchievements: number | undefined;
     try {
       newAchievements = await mergeAchievements(
         game,
@@ -252,7 +252,7 @@ export class AchievementWatcherManager {
       this.alreadySyncedGames.delete(gameKey);
     }
 
-    if (newAchievements > 0) {
+    if (newAchievements !== undefined && newAchievements > 0) {
       this.notifyCombinedAchievementsUnlocked(1, newAchievements);
     }
   }
@@ -424,10 +424,9 @@ export class AchievementWatcherManager {
         (achievements) => achievements
       ).length;
 
-      const totalNewAchievements = newAchievementsCount.reduce(
-        (acc, val) => acc + val,
-        0
-      );
+      const totalNewAchievements = newAchievementsCount
+        .filter((val): val is number => typeof val === "number")
+        .reduce((acc, val) => acc + val, 0);
 
       if (totalNewAchievements > 0) {
         await setTimeout(4000);

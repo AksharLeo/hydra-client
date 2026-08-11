@@ -1,0 +1,159 @@
+yarn run v1.22.22
+$ eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix
+
+/home/aksharleo/Projects/hydra/hydra-client/src/big-picture/src/components/common/focus-item/index.tsx
+  106:6  warning  React Hook useEffect has a missing dependency: 'isMeasurement'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  150:6  warning  React Hook useEffect has a missing dependency: 'isMeasurement'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  167:6  warning  React Hook useEffect has a missing dependency: 'isMeasurement'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/home/aksharleo/Projects/hydra/hydra-client/src/big-picture/src/components/modals/download-game/index.tsx
+  596:9  warning  The 'handleNextStep' function makes the dependencies of useCallback Hook (at line 785) change on every render. Move it inside the useCallback callback. Alternatively, wrap the definition of 'handleNextStep' in its own useCallback() Hook  react-hooks/exhaustive-deps
+
+/home/aksharleo/Projects/hydra/hydra-client/src/big-picture/src/components/pages/game/game-settings-modal/cloud-tab.tsx
+  267:39  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  315:37  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  319:23  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/aksharleo/Projects/hydra/hydra-client/src/big-picture/src/components/pages/game/game-settings-modal/index.tsx
+  97:6  warning  React Hook useEffect has a missing dependency: 'visible'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/home/aksharleo/Projects/hydra/hydra-client/src/big-picture/src/hooks/queries/use-game-download-options.hook.ts
+  252:6  warning  React Hook useEffect has a missing dependency: 'game'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/home/aksharleo/Projects/hydra/hydra-client/src/big-picture/src/pages/catalogue/filters-modal.tsx
+   427:65  warning  The ref value 'scrollAnimationFrameRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'scrollAnimationFrameRef.current' to a variable inside the effect, and use that variable in the cleanup function  react-hooks/exhaustive-deps
+  1023:5   warning  React Hook useMemo has a missing dependency: 'handleSelectedListScroll'. Either include it or remove the dependency array                                                                                                                                                                      react-hooks/exhaustive-deps
+
+/home/aksharleo/Projects/hydra/hydra-client/src/big-picture/src/pages/downloads/downloads.tsx
+  1604:6  warning  React Hook useMemo has a missing dependency: 'moveMode'. Either include it or remove the dependency array                                                                     react-hooks/exhaustive-deps
+  2196:6  warning  React Hook useMemo has unnecessary dependencies: 'canPromoteToHero', 'moveQueuedDownload', 'sendToQueue', and 'startNow'. Either exclude them or remove the dependency array  react-hooks/exhaustive-deps
+
+/home/aksharleo/Projects/hydra/hydra-client/src/big-picture/src/pages/downloads/use-big-picture-downloads-page-data.ts
+  399:6  warning  React Hook useMemo has an unnecessary dependency: 'renderTick'. Either exclude it or remove the dependency array    react-hooks/exhaustive-deps
+  546:6  warning  React Hook useMemo has an unnecessary dependency: 'renderTick'. Either exclude it or remove the dependency array    react-hooks/exhaustive-deps
+  655:5  warning  React Hook useCallback has a missing dependency: 'setLastPacket'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  728:5  warning  React Hook useCallback has a missing dependency: 'setLastPacket'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/home/aksharleo/Projects/hydra/hydra-client/src/big-picture/src/pages/settings/behavior-section.tsx
+  181:6  warning  React Hook useMemo has a missing dependency: 'updateUserPreferences'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/home/aksharleo/Projects/hydra/hydra-client/src/big-picture/src/pages/settings/big-picture.tsx
+  133:6  warning  React Hook useMemo has a missing dependency: 't'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  145:6  warning  React Hook useMemo has a missing dependency: 't'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  157:6  warning  React Hook useMemo has a missing dependency: 't'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  169:6  warning  React Hook useMemo has a missing dependency: 't'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  187:6  warning  React Hook useMemo has a missing dependency: 't'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/home/aksharleo/Projects/hydra/hydra-client/src/big-picture/src/pages/settings/compatibility.tsx
+  419:6  warning  React Hook useMemo has a missing dependency: 'handleOpenExternalLink'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/home/aksharleo/Projects/hydra/hydra-client/src/big-picture/src/pages/settings/content.tsx
+  103:6  warning  React Hook useMemo has a missing dependency: 'updateUserPreferences'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/home/aksharleo/Projects/hydra/hydra-client/src/big-picture/src/pages/settings/downloads-behavior-section.tsx
+  128:6  warning  React Hook useMemo has a missing dependency: 'updateUserPreferences'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/home/aksharleo/Projects/hydra/hydra-client/src/big-picture/src/pages/settings/downloads-sources-section.tsx
+  226:6  warning  React Hook useCallback has a missing dependency: 'formatDateTime'. Either include it or remove the dependency array               react-hooks/exhaustive-deps
+  341:6  warning  React Hook useCallback has an unnecessary dependency: 'downloadSources.length'. Either exclude it or remove the dependency array  react-hooks/exhaustive-deps
+
+/home/aksharleo/Projects/hydra/hydra-client/src/big-picture/src/pages/settings/notifications-achievements-section.tsx
+  129:6  warning  React Hook useMemo has a missing dependency: 'updateUserPreferences'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/home/aksharleo/Projects/hydra/hydra-client/src/big-picture/src/pages/settings/notifications-library-section.tsx
+  118:6  warning  React Hook useMemo has a missing dependency: 'updateUserPreferences'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/home/aksharleo/Projects/hydra/hydra-client/src/main/events/library/get-available-drives.ts
+  45:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  48:32  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/aksharleo/Projects/hydra/hydra-client/src/main/events/library/transfer-game-files.ts
+  253:23  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  254:34  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/aksharleo/Projects/hydra/hydra-client/src/main/events/register-event.ts
+  5:59  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  5:69  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/aksharleo/Projects/hydra/hydra-client/src/main/services/achievements/parse-achievement-file.ts
+  147:49  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  174:48  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  195:47  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  213:48  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  243:25  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  271:43  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  294:47  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  311:43  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  343:49  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/aksharleo/Projects/hydra/hydra-client/src/main/services/hydra-api.ts
+  156:14  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  391:24  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  393:14  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  416:32  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  418:14  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  445:25  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  447:12  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  461:24  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  463:12  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  477:26  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  479:12  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  493:27  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/aksharleo/Projects/hydra/hydra-client/src/main/services/library-sync/merge-with-remote-games.ts
+  151:33  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  200:33  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  236:33  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  293:65  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  343:45  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  347:22  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  352:16  error    Unexpected constant condition             no-constant-condition
+  353:54  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/aksharleo/Projects/hydra/hydra-client/src/main/services/window-manager.ts
+  655:14  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/aksharleo/Projects/hydra/hydra-client/src/preload/index.ts
+  1783:45  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  1786:46  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/home/aksharleo/Projects/hydra/hydra-client/src/renderer/src/context/game-details/game-details.context.tsx
+  274:6  warning  React Hook useEffect has a missing dependency: 'updateGame'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/home/aksharleo/Projects/hydra/hydra-client/src/renderer/src/context/user-profile/user-profile.context.tsx
+  330:6  warning  React Hook useEffect has a missing dependency: 'libraryGames.length'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/home/aksharleo/Projects/hydra/hydra-client/src/renderer/src/pages/downloads/download-group.tsx
+  950:5  warning  React Hook useMemo has missing dependencies: 'getFinalDownloadSize' and 'isGameSeeding'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+
+/home/aksharleo/Projects/hydra/hydra-client/src/renderer/src/pages/game-details/game-reviews.tsx
+  207:5  warning  React Hook useCallback has an unnecessary dependency: 'i18n.language'. Either exclude it or remove the dependency array  react-hooks/exhaustive-deps
+
+/home/aksharleo/Projects/hydra/hydra-client/src/renderer/src/pages/game-details/modals/game-options-modal.tsx
+  111:40  warning  Unexpected any. Specify a different type                                                                                                                                                                                                                               @typescript-eslint/no-explicit-any
+  372:17  warning  Unexpected any. Specify a different type                                                                                                                                                                                                                               @typescript-eslint/no-explicit-any
+  382:36  warning  Unexpected any. Specify a different type                                                                                                                                                                                                                               @typescript-eslint/no-explicit-any
+  387:38  warning  Unexpected any. Specify a different type                                                                                                                                                                                                                               @typescript-eslint/no-explicit-any
+  424:9   warning  The 'handleCancelTransfer' function makes the dependencies of useMemo Hook (at line 1097) change on every render. Move it inside the useMemo callback. Alternatively, wrap the definition of 'handleCancelTransfer' in its own useCallback() Hook                      react-hooks/exhaustive-deps
+  495:9   warning  The 'handleStartTransfer' function makes the dependencies of useMemo Hook (at line 1097) change on every render. Move it inside the useMemo callback. Alternatively, wrap the definition of 'handleStartTransfer' in its own useCallback() Hook                        react-hooks/exhaustive-deps
+  512:9   warning  The 'handleChangeExecutableLocation' function makes the dependencies of useMemo Hook (at line 1097) change on every render. Move it inside the useMemo callback. Alternatively, wrap the definition of 'handleChangeExecutableLocation' in its own useCallback() Hook  react-hooks/exhaustive-deps
+  558:9   warning  The 'handleDeleteSteamShortcut' function makes the dependencies of useMemo Hook (at line 1097) change on every render. Move it inside the useMemo callback. Alternatively, wrap the definition of 'handleDeleteSteamShortcut' in its own useCallback() Hook            react-hooks/exhaustive-deps
+  583:9   warning  The 'handleCreateShortcut' function makes the dependencies of useMemo Hook (at line 1097) change on every render. Move it inside the useMemo callback. Alternatively, wrap the definition of 'handleCreateShortcut' in its own useCallback() Hook                      react-hooks/exhaustive-deps
+  600:9   warning  The 'handleOpenGameExecutablePath' function makes the dependencies of useMemo Hook (at line 1097) change on every render. Move it inside the useMemo callback. Alternatively, wrap the definition of 'handleOpenGameExecutablePath' in its own useCallback() Hook      react-hooks/exhaustive-deps
+  602:9   warning  The 'handleOpenSaveFolder' function makes the dependencies of useMemo Hook (at line 1097) change on every render. Move it inside the useMemo callback. Alternatively, wrap the definition of 'handleOpenSaveFolder' in its own useCallback() Hook                      react-hooks/exhaustive-deps
+  610:9   warning  The 'handleClearExecutablePath' function makes the dependencies of useMemo Hook (at line 1097) change on every render. Move it inside the useMemo callback. Alternatively, wrap the definition of 'handleClearExecutablePath' in its own useCallback() Hook            react-hooks/exhaustive-deps
+  733:9   warning  The 'handleChangeLaunchOptions' function makes the dependencies of useMemo Hook (at line 1097) change on every render. Move it inside the useMemo callback. Alternatively, wrap the definition of 'handleChangeLaunchOptions' in its own useCallback() Hook            react-hooks/exhaustive-deps
+  740:9   warning  The 'handleChangeGameTitle' function makes the dependencies of useMemo Hook (at line 1097) change on every render. Move it inside the useMemo callback. Alternatively, wrap the definition of 'handleChangeGameTitle' in its own useCallback() Hook                    react-hooks/exhaustive-deps
+  743:9   warning  The 'handleBlurGameTitle' function makes the dependencies of useMemo Hook (at line 1097) change on every render. Move it inside the useMemo callback. Alternatively, wrap the definition of 'handleBlurGameTitle' in its own useCallback() Hook                        react-hooks/exhaustive-deps
+  819:9   warning  The 'handleClearLaunchOptions' function makes the dependencies of useMemo Hook (at line 1097) change on every render. Move it inside the useMemo callback. Alternatively, wrap the definition of 'handleClearLaunchOptions' in its own useCallback() Hook              react-hooks/exhaustive-deps
+
+/home/aksharleo/Projects/hydra/hydra-client/src/renderer/src/pages/settings/settings-context-compatibility.tsx
+  128:6  warning  React Hook useEffect has a missing dependency: 'userPreferences?.defaultWinePrefixPath'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/home/aksharleo/Projects/hydra/hydra-client/src/shared/index.ts
+   92:28  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  304:6   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+✖ 91 problems (1 error, 90 warnings)
+
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.

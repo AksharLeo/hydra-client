@@ -59,7 +59,8 @@ export function UserLibraryGameCard({
     }
   }, [game.objectId, game.shop, game.coverImageUrl]);
 
-  const coverImageUrl = game.customLibraryImageUrl ?? game.coverImageUrl ?? fetchedCover;
+  const coverImageUrl =
+    game.customLibraryImageUrl ?? game.coverImageUrl ?? fetchedCover;
 
   const isAnimatedCover = isAnimatedCoverCandidate(coverImageUrl);
   const coverPoster = useCoverPoster(coverImageUrl, isAnimatedCover);

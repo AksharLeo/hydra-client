@@ -19,8 +19,16 @@ const RecentGameIcon = ({ game }: { game: UserGame }) => {
 
   const isCustomGame = game.shop === "custom";
   const iconUrl = isCustomGame
-    ? localGame?.libraryImageUrl || localGame?.iconUrl || game.customLibraryImageUrl || game.coverImageUrl || ""
-    : localGame?.customIconUrl || localGame?.iconUrl || game.customIconUrl || game.iconUrl || "";
+    ? localGame?.libraryImageUrl ||
+      localGame?.iconUrl ||
+      game.customLibraryImageUrl ||
+      game.coverImageUrl ||
+      ""
+    : localGame?.customIconUrl ||
+      localGame?.iconUrl ||
+      game.customIconUrl ||
+      game.iconUrl ||
+      "";
 
   if (!iconUrl) {
     return isCustomGame ? (

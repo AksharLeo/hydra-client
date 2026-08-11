@@ -26,10 +26,14 @@ export function useLibraryPageData(
   secondaryFilter: LibrarySecondaryFilter
 ) {
   const deferredSearch = useDeferredValue(search);
-  const showHiddenGames = useLibrarySettingsStore((state) => state.showHiddenGames);
+  const showHiddenGames = useLibrarySettingsStore(
+    (state) => state.showHiddenGames
+  );
 
   const lastPlayedSortedLibrary = useMemo(() => {
-    return library.filter((g) => showHiddenGames || !g.isHidden).sort(sortByLastPlayed);
+    return library
+      .filter((g) => showHiddenGames || !g.isHidden)
+      .sort(sortByLastPlayed);
   }, [library, showHiddenGames]);
 
   const filteredLibrary = useMemo(() => {
@@ -38,12 +42,21 @@ export function useLibraryPageData(
       tabFilteredLibrary,
       secondaryFilter
     );
-    const searchFilteredLibrary = secondaryFilteredLibrary.filter((game) =>
-      (showHiddenGames || !game.isHidden) && matchesSearchQuery(game, deferredSearch)
+    const searchFilteredLibrary = secondaryFilteredLibrary.filter(
+      (game) =>
+        (showHiddenGames || !game.isHidden) &&
+        matchesSearchQuery(game, deferredSearch)
     );
 
     return sortLibraryGames(searchFilteredLibrary, sortBy);
-  }, [deferredSearch, library, secondaryFilter, selectedTab, sortBy, showHiddenGames]);
+  }, [
+    deferredSearch,
+    library,
+    secondaryFilter,
+    selectedTab,
+    sortBy,
+    showHiddenGames,
+  ]);
 
   const filterCounts = useMemo(() => {
     return getLibraryFilterCounts(library, showHiddenGames);

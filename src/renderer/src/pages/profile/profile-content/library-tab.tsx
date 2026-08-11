@@ -9,7 +9,12 @@ import {
 } from "@primer/octicons-react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useCallback, useMemo, useState } from "react";
-import { useFormat, useLibrary, useToast, useAppSelector } from "@renderer/hooks";
+import {
+  useFormat,
+  useLibrary,
+  useToast,
+  useAppSelector,
+} from "@renderer/hooks";
 import { logger } from "@renderer/logger";
 import type { LibraryGame, UserGame } from "@types";
 import { useCollectionContextMenu } from "@renderer/context";
@@ -63,14 +68,20 @@ export function LibraryTab({
   const { library } = useLibrary();
   const { openCollectionContextMenu } = useCollectionContextMenu();
   const { showSuccessToast, showErrorToast } = useToast();
-  const showHiddenGames = useAppSelector((state) => state.library.showHiddenGames);
+  const showHiddenGames = useAppSelector(
+    (state) => state.library.showHiddenGames
+  );
 
   const filteredLibraryGames = useMemo(() => {
-    return showHiddenGames ? libraryGames : libraryGames.filter((g) => !g.isHidden);
+    return showHiddenGames
+      ? libraryGames
+      : libraryGames.filter((g) => !g.isHidden);
   }, [libraryGames, showHiddenGames]);
 
   const filteredPinnedGames = useMemo(() => {
-    return showHiddenGames ? pinnedGames : pinnedGames.filter((g) => !g.isHidden);
+    return showHiddenGames
+      ? pinnedGames
+      : pinnedGames.filter((g) => !g.isHidden);
   }, [pinnedGames, showHiddenGames]);
 
   const [contextMenu, setContextMenu] = useState<{

@@ -329,7 +329,11 @@ export function GameContextMenu({
         {
           id: "toggle-visibility",
           label: game.isHidden ? "Unhide Game" : "Hide Game",
-          icon: game.isHidden ? <EyeIcon size={16} /> : <EyeClosedIcon size={16} />,
+          icon: game.isHidden ? (
+            <EyeIcon size={16} />
+          ) : (
+            <EyeClosedIcon size={16} />
+          ),
           onClick: () => handleToggleVisibility(!game.isHidden),
           disabled: isDeleting,
         },

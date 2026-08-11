@@ -2,10 +2,10 @@
 
 [<img src="https://raw.githubusercontent.com/hydralauncher/hydra/refs/heads/main/resources/icon.png" width="144"/>](https://help.hydralauncher.gg)
 
-  <h1 align="center">Hydra Launcher (Self-Hosted Fork)</h1>
+  <h1 align="center">Hydra Self-Hosted Client</h1>
 
   <p align="center">
-    <strong>This is a custom fork of the official Hydra Launcher modified to connect to the <a href="https://github.com/AksharLeo/hydra-selfhosted-backend">Hydra Self-Hosted Backend</a>. It allows you to run a personal Hydra instance where all cloud features (authentication, cloud saves, achievements, library sync) are fully under your control.</strong>
+    <strong>This is a custom fork of the official Hydra Launcher completely rebranded as <b>Hydra Self-Hosted</b> to avoid OS-level conflicts, and modified to connect to the <a href="https://github.com/AksharLeo/hydra-selfhosted-backend">Hydra Self-Hosted Backend</a>. It allows you to run a personal Hydra instance where all cloud features (authentication, cloud saves, achievements, library sync) are fully under your control.</strong>
   </p>
 
 ![Hydra Launcher Home Page](./docs/screenshot.png)
@@ -41,7 +41,7 @@ Please, refer to the official Documentation pages: [docs.hydralauncher.gg](https
 
 ### Local development requirements
 
-- Node.js + Yarn
+- Node.js 22 + Yarn
 - Python 3.9+ (with `pip install -r requirements.txt`)
 - Rust toolchain (for `hydra-native`)
 

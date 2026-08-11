@@ -662,7 +662,7 @@ export class WindowManager {
         valueEncoding: "json",
       })) as any;
       if (prefs?.serverType === "local") {
-        authBaseUrl = "http://localhost:3001/auth/page";
+        authBaseUrl = "http://127.0.0.1:3001/auth/page";
       } else if (prefs?.serverType === "custom" && prefs?.customBackendUrl) {
         authBaseUrl = `${prefs.customBackendUrl}/auth/page`;
       }

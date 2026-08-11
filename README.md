@@ -50,6 +50,7 @@ After installing dependencies, `postinstall` now builds the Rust native addon au
 ### Building Binaries
 
 To build the executable binaries for distribution, you must have all requirements installed and run the following commands with increased memory allocation:
+
 - For Linux: \`NODE_OPTIONS=--max-old-space-size=8192 yarn run build:linux\`
 - For Windows: \`NODE_OPTIONS=--max-old-space-size=8192 yarn run build:win\`
 

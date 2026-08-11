@@ -45,11 +45,13 @@ Fork of the official [Hydra Launcher](https://github.com/hydralauncher/hydra) mo
 - **How it works**: When changed, the client signs out, dynamically reconfigures `HydraApi.setupApi()` with the new target URL from LevelDB, and soft-reloads the window.
 
 ### 3. Hidden Games Support
+
 - **What**: Added UI options to toggle the visibility of hidden games in standard and Big Picture modes. Hidden games are marked in the library and hidden from public profiles, but can be viewed by the owner.
 - **Where**: `src/renderer/src/pages/settings/settings-behavior.tsx` and `src/big-picture/src/components/pages/game/game-settings-modal/danger-zone-tab.tsx`.
 - **Backend relation**: Required — the self-hosted backend handles `visibility: 'hidden'` logic.
 
 ### 4. Automated Release Workflow
+
 - **What**: Added a GitHub Actions workflow to automatically build binaries for Linux and Windows and upload them to release tags.
 - **Where**: `.github/workflows/release.yml`
 

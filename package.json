@@ -1,12 +1,12 @@
 {
-  "name": "hydralauncher",
+  "name": "hydra-selfhosted-client",
   "version": "4.1.0",
-  "description": "Hydra",
+  "description": "Hydra Self-Hosted Client",
   "main": "./out/main/index.js",
   "author": "Los Broxas",
   "repository": {
     "type": "git",
-    "url": "https://github.com/hydralauncher/hydra.git"
+    "url": "https://github.com/AksharLeo/hydra-client.git"
   },
   "type": "module",
   "engines": {

@@ -584,7 +584,7 @@ export class GameFilesManager {
       objectId: this.objectId,
     });
 
-    return `hydralauncher://run?${query.toString()}`;
+    return `hydraselfhosted://run?${query.toString()}`;
   }
 
   private quoteLinuxExecArg(value: string) {

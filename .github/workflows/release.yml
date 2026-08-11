@@ -3,19 +3,27 @@ name: Build and Release
 on:
   push:
     tags:
-      - "v*" # Trigger on version tags, e.g., v1.0.0
+      - "v*"
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version number to build (e.g., 4.1.0-beta.2)'
+        description: "Version number to build (e.g., 4.1.0-beta.2)"
         required: true
         type: string
+
+permissions:
+  contents: write
+
+env:
+  NODE_OPTIONS: --max-old-space-size=8192 --max-semi-space-size=128
 
 jobs:
   release:
     strategy:
+      fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest, windows-2022]
+
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -25,7 +33,11 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22.21.0"
+          cache: "yarn"
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -45,30 +57,32 @@ jobs:
           if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
             VERSION="${{ github.event.inputs.version }}"
           else
-            VERSION=${GITHUB_REF#refs/tags/v}
+            VERSION="${GITHUB_REF#refs/tags/v}"
           fi
-          npm version $VERSION --no-git-tag-version --allow-same-version
+
+          npm version "$VERSION" --no-git-tag-version --allow-same-version
+
+      - name: Install Node Dependencies
+        run: yarn --frozen-lockfile
 
       - name: Install Python Dependencies
         run: pip install -r requirements.txt
 
-      - name: Install Node Dependencies
-        run: yarn install
+      - name: Build Python RPC with cx_Freeze
+        run: python python_rpc/setup.py build
 
       - name: Prepare Environment File
         shell: bash
         run: cp .env.example .env
 
-      - name: Build and Publish Linux Binaries
+      - name: Build Linux
         if: runner.os == 'Linux'
+        run: yarn build:linux
         env:
-          NODE_OPTIONS: --max-old-space-size=8192
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: yarn run build:linux
 
-      - name: Build and Publish Windows Binaries
+      - name: Build Windows
         if: runner.os == 'Windows'
+        run: yarn build:win
         env:
-          NODE_OPTIONS: --max-old-space-size=8192
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: yarn run build:win

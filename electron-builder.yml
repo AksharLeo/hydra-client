@@ -1,5 +1,5 @@
-appId: gg.hydralauncher.hydra
-productName: Hydra
+appId: gg.hydraselfhosted.client
+productName: Hydra Self-Hosted
 directories:
   buildResources: build
 extraResources:
@@ -24,7 +24,7 @@ asarUnpack:
   - node_modules/sharp/**
   - node_modules/@img/sharp-libvips-*/**
 win:
-  executableName: Hydra
+  executableName: "Hydra Self-Hosted"
   extraResources:
     - from: binaries/7z.exe
     - from: binaries/7z.dll
@@ -66,13 +66,13 @@ linux:
   maintainer: electronjs.org
   category: Game
   mimeTypes:
-    - x-scheme-handler/hydralauncher
+    - x-scheme-handler/hydraselfhosted
 appImage:
   artifactName: ${name}-${version}.${ext}
 npmRebuild: false
 publish:
   provider: github
-  owner: hydralauncher
-  repo: hydra
+  owner: AksharLeo
+  repo: hydra-client
 electronDownload:
   mirror: https://npmmirror.com/mirrors/electron/

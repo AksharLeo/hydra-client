@@ -18,7 +18,7 @@ interface LanguageSectionProps {
   className?: string;
 }
 
-const GITHUB_REPOSITORY_URL = "https://github.com/hydralauncher/hydra";
+const GITHUB_REPOSITORY_URL = "https://github.com/AksharLeo/hydra-client";
 
 export function LanguageSection({ className }: Readonly<LanguageSectionProps>) {
   const userPreferences = useUserPreferences();

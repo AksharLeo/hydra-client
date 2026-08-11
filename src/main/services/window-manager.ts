@@ -621,14 +621,20 @@ export class WindowManager {
     closeWindow: () => void
   ) {
     contents.on("will-navigate", (_event, url) => {
-      if (url.startsWith("hydralauncher://auth")) {
+      if (
+        url.startsWith("hydraselfhosted://auth") ||
+        url.startsWith("hydralauncher://auth")
+      ) {
         closeWindow();
 
         HydraApi.handleExternalAuth(url);
         return;
       }
 
-      if (url.startsWith("hydralauncher://update-account")) {
+      if (
+        url.startsWith("hydraselfhosted://update-account") ||
+        url.startsWith("hydralauncher://update-account")
+      ) {
         closeWindow();
 
         WindowManager.sendToAppWindows("on-account-updated");

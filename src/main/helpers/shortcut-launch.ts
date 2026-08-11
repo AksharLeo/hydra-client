@@ -13,7 +13,7 @@ export const buildRunDeepLink = (shop: GameShop, objectId: string) => {
     objectId,
   });
 
-  return `hydralauncher://run?${query.toString()}`;
+  return `hydraselfhosted://run?${query.toString()}`;
 };
 
 const quoteLinuxExecArg = (value: string) => {

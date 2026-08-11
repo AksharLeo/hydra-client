@@ -26,8 +26,8 @@ const { autoUpdater } = updater;
 
 autoUpdater.setFeedURL({
   provider: "github",
-  owner: "hydralauncher",
-  repo: "hydra",
+  owner: "AksharLeo",
+  repo: "hydra-client",
 });
 
 autoUpdater.logger = logger;
@@ -50,7 +50,7 @@ i18n.init({
   },
 });
 
-const PROTOCOL = "hydralauncher";
+const PROTOCOL = "hydraselfhosted";
 
 // Register the custom schemes as privileged so the renderer can fetch them
 // (supportFetchAPI) and use the results on a canvas without tainting it
@@ -78,7 +78,7 @@ if (process.defaultApp) {
 
 const initializeApp = async () => {
   refreshPortableShortcutLauncher();
-  electronApp.setAppUserModelId("gg.hydralauncher.hydra");
+  electronApp.setAppUserModelId("gg.hydraselfhosted.client");
 
   protocol.handle("local", (request) => {
     const filePath = request.url.slice("local:".length);
@@ -175,10 +175,10 @@ const initializeApp = async () => {
 
   // Check if starting from a "run" deep link - don't show main window in that case
   const deepLinkArg = process.argv.find((arg) =>
-    arg.startsWith("hydralauncher://")
+    arg.startsWith("hydraselfhosted://")
   );
   const forceBigPicture = process.argv.includes("--big-picture");
-  const isRunDeepLink = deepLinkArg?.startsWith("hydralauncher://run");
+  const isRunDeepLink = deepLinkArg?.startsWith("hydraselfhosted://run");
 
   if (!process.argv.includes("--hidden") && !isRunDeepLink) {
     WindowManager.createMainWindow({ forceBigPicture });
@@ -292,14 +292,30 @@ const handleDeepLinkPath = (uri?: string) => {
 
 app.on("second-instance", (_event, commandLine) => {
   const deepLink = commandLine.find((arg) =>
-    arg.startsWith("hydralauncher://")
+    arg.startsWith("hydraselfhosted://")
   );
   const forceBigPicture = commandLine.includes("--big-picture");
 
   // Check if this is a "run" deep link - don't show main window in that case
-  const isRunDeepLink = deepLink?.startsWith("hydralauncher://run");
+  if (deepLink) {
+    const isRunDeepLink = deepLink?.startsWith("hydraselfhosted://run");
 
-  if (!isRunDeepLink) {
+    if (!isRunDeepLink) {
+      if (WindowManager.mainWindow) {
+        if (WindowManager.mainWindow.isMinimized())
+          WindowManager.mainWindow.restore();
+
+        WindowManager.mainWindow.focus();
+        if (forceBigPicture) {
+          void WindowManager.openBigPictureWindow();
+        }
+      } else {
+        WindowManager.createMainWindow({ forceBigPicture });
+      }
+    }
+
+    handleDeepLinkPath(deepLink);
+  } else {
     if (WindowManager.mainWindow) {
       if (WindowManager.mainWindow.isMinimized())
         WindowManager.mainWindow.restore();

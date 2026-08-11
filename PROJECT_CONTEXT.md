@@ -1,4 +1,4 @@
-# PROJECT_CONTEXT.md — hydra-client
+# PROJECT_CONTEXT.md — hydra-selfhosted-client
 
 ## Project
 
@@ -55,7 +55,13 @@ Fork of the official [Hydra Launcher](https://github.com/hydralauncher/hydra) mo
 - **What**: Added a GitHub Actions workflow to automatically build binaries for Linux and Windows and upload them to release tags.
 - **Where**: `.github/workflows/release.yml`
 
-### 5. Environment Configuration (Default Fallback)
+### 6. App Rebranding (Conflict Prevention)
+
+- **What**: The app's name, display name, protocol scheme, and Application User Model ID have been completely changed to prevent overlap with the official Hydra launcher.
+- **Where**: `package.json`, `electron-builder.yml`, `src/main/index.ts`, etc.
+- **Why**: Allows users to run both the official client and this self-hosted fork simultaneously on the same machine without shared state conflicts (different AppData folders).
+
+### 7. Environment Configuration (Default Fallback)
 
 - **What**: The `.env` file must still be present and contain the official Hydra URLs. It serves as the baseline fallback for the UI server connection setting (e.g. when "Official Server" is selected, or for downloading assets/catalogue data not covered by the custom backend).
 - **Where**: `.env` (untracked file, not committed)
@@ -92,7 +98,7 @@ Fork of the official [Hydra Launcher](https://github.com/hydralauncher/hydra) mo
 - **Auth URL**: The client expects the backend to handle wildcard paths under `/auth/page/*` (e.g. appending `AuthPage` enum value and `?lng=`). This is implemented in the backend.
 - **User Profile**: The client expects `GET /profile/me` for user data, returning the exact `UserDetails` type. This is implemented in the backend.
 - **Library Sync**: Many client API calls go to `/profile/games/*` routes for library management.
-- **Deep Links**: The client uses the `hydralauncher://` protocol scheme (not `hydra://`) for deep links.
+- **Deep Links**: The client uses the `hydraselfhosted://` protocol scheme (not `hydralauncher://`) for deep links.
 
 ## Architecture
 

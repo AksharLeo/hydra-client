@@ -32,6 +32,10 @@ interface HydraApiUserAuth {
 export class HydraApi {
   private static instance: AxiosInstance;
 
+  public static get baseUrl() {
+    return this.instance?.defaults.baseURL;
+  }
+
   private static readonly EXPIRATION_OFFSET_IN_MS = 1000 * 60 * 5; // 5 minutes
   private static readonly ADD_LOG_INTERCEPTOR = true;
 

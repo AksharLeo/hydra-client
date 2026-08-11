@@ -39,7 +39,7 @@ Fork of the official [Hydra Launcher](https://github.com/hydralauncher/hydra) mo
 
 ### 2. Dynamic Server Configuration (UI)
 
-- **What**: Added a **Server Connection** setting in the **Settings > Integrations** tab. Users can seamlessly switch between **Official**, **Local** (`http://localhost:3001`), and **Custom** (user-provided URL) backends.
+- **What**: Added a **Server Connection** setting in the **Settings > Integrations** tab. Users can seamlessly switch between **Official**, **Local** (`http://127.0.0.1:3001`), and **Custom** (user-provided URL) backends.
 - **Where**: `src/renderer/src/pages/settings/integrations/server-connection.tsx` and `src/main/services/hydra-api.ts`.
 - **Why**: Allows users to connect to self-hosted backends without editing `.env` files. The backend handles auth, profiles, library sync, and cloud saves. Game catalogue data and static assets still come from the official Hydra infrastructure via the frontend `MAIN_VITE_EXTERNAL_RESOURCES_URL` (or are proxied through the custom backend).
 - **How it works**: When changed, the client signs out, dynamically reconfigures `HydraApi.setupApi()` with the new target URL from LevelDB, and soft-reloads the window.
@@ -52,8 +52,8 @@ Fork of the official [Hydra Launcher](https://github.com/hydralauncher/hydra) mo
 
 ### 4. Automated Release Workflow
 
-- **What**: Added a GitHub Actions workflow to automatically build binaries for Linux and Windows and upload them to release tags.
-- **Where**: `.github/workflows/release.yml`
+- **What**: Added a GitHub Actions workflow to automatically build binaries for Linux and Windows and upload them to release tags. `snap` target is explicitly configured to `provider: github` to bypass hardcoded Ubuntu SnapStore publishing crashes.
+- **Where**: `.github/workflows/release.yml` and `electron-builder.yml`
 
 ### 6. App Rebranding (Conflict Prevention)
 
@@ -77,8 +77,8 @@ Fork of the official [Hydra Launcher](https://github.com/hydralauncher/hydra) mo
 
 ### What Works
 
-- **Environment pointing**: Client `.env` correctly routes API calls to `localhost:3001`.
-- **Auth page opening**: Client opens the backend's login HTML page in a BrowserWindow.
+- **Environment pointing**: Client `.env` correctly routes API calls to `127.0.0.1:3001` (avoiding IPv6 `localhost` resolution issues in Node 18+).
+- **Auth page opening**: Client opens the backend's login HTML page in a BrowserWindow and intercepts `hydraselfhosted://` redirects cleanly using `event.preventDefault()` to suppress browser read errors.
 - **Account creation**: Users can register via the backend's auth page.
 
 ### What Partially Works

@@ -14,13 +14,15 @@ import {
   useGameCollections,
   useUserDetails,
 } from "@renderer/hooks";
-import { setHeaderTitle } from "@renderer/features";
+import { setHeaderTitle, setShowHiddenGames } from "@renderer/features";
 import {
   HeartIcon,
   TelescopeIcon,
   FileDirectoryIcon,
   SearchIcon,
   SyncIcon,
+  EyeIcon,
+  EyeClosedIcon,
 } from "@primer/octicons-react";
 import { useTranslation } from "react-i18next";
 import { AuthPage, removeDiacritics } from "@shared";
@@ -302,8 +304,14 @@ export default function Library() {
     [library, sortBy]
   );
 
+  const showHiddenGames = useAppSelector((state) => state.library.showHiddenGames);
+
   const filteredLibrary = useMemo(() => {
     let filtered = sortedLibrary;
+
+    if (!showHiddenGames) {
+      filtered = filtered.filter((game) => !game.isHidden);
+    }
 
     if (selectedCollectionId) {
       if (selectedCollectionId === FAVORITES_COLLECTION_ID) {
@@ -357,6 +365,7 @@ export default function Library() {
     selectedCollectionId,
     effectiveCategory,
     selectedPlatform,
+    showHiddenGames,
   ]);
 
   const uniquePlatforms = useMemo(() => {
@@ -372,8 +381,8 @@ export default function Library() {
   }, [library]);
 
   const favoritesCount = useMemo(() => {
-    return library.filter((game) => game.favorite).length;
-  }, [library]);
+    return library.filter((game) => game.favorite && (showHiddenGames || !game.isHidden)).length;
+  }, [library, showHiddenGames]);
 
   const libraryCollections = useMemo<GameCollection[]>(() => {
     return [
@@ -486,6 +495,17 @@ export default function Library() {
                   onPlatformChange={setSelectedPlatform}
                 />
               )}
+              <div className="library-view-options__container">
+                <div className="library-view-options__options">
+                  <button
+                    className={`library-view-options__option ${showHiddenGames ? "active" : ""}`}
+                    onClick={() => dispatch(setShowHiddenGames(!showHiddenGames))}
+                    title={showHiddenGames ? t("hide_hidden_games", "Hide hidden games") : t("show_hidden_games", "Show hidden games")}
+                  >
+                    {showHiddenGames ? <EyeIcon size={16} /> : <EyeClosedIcon size={16} />}
+                  </button>
+                </div>
+              </div>
               <ViewOptions
                 viewMode={viewMode}
                 onViewModeChange={handleViewModeChange}

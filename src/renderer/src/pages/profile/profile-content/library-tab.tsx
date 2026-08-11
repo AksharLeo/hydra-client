@@ -9,7 +9,7 @@ import {
 } from "@primer/octicons-react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useCallback, useMemo, useState } from "react";
-import { useFormat, useLibrary, useToast } from "@renderer/hooks";
+import { useFormat, useLibrary, useToast, useAppSelector } from "@renderer/hooks";
 import { logger } from "@renderer/logger";
 import type { LibraryGame, UserGame } from "@types";
 import { useCollectionContextMenu } from "@renderer/context";
@@ -63,6 +63,16 @@ export function LibraryTab({
   const { library } = useLibrary();
   const { openCollectionContextMenu } = useCollectionContextMenu();
   const { showSuccessToast, showErrorToast } = useToast();
+  const showHiddenGames = useAppSelector((state) => state.library.showHiddenGames);
+
+  const filteredLibraryGames = useMemo(() => {
+    return showHiddenGames ? libraryGames : libraryGames.filter((g) => !g.isHidden);
+  }, [libraryGames, showHiddenGames]);
+
+  const filteredPinnedGames = useMemo(() => {
+    return showHiddenGames ? pinnedGames : pinnedGames.filter((g) => !g.isHidden);
+  }, [pinnedGames, showHiddenGames]);
+
   const [contextMenu, setContextMenu] = useState<{
     game: UserGame | null;
     visible: boolean;
@@ -162,8 +172,8 @@ export function LibraryTab({
     { value: "playtime", label: t("playtime"), icon: ClockIcon },
   ];
 
-  const hasGames = libraryGames.length > 0;
-  const hasPinnedGames = pinnedGames.length > 0;
+  const hasGames = filteredLibraryGames.length > 0;
+  const hasPinnedGames = filteredPinnedGames.length > 0;
   const hasAnyGames = hasGames || hasPinnedGames;
 
   const resolvedCount =
@@ -210,13 +220,13 @@ export function LibraryTab({
                 <div className="profile-content__section-title-group">
                   <h2>{t("pinned")}</h2>
                   <span className="profile-content__section-badge">
-                    {pinnedGames.length}
+                    {filteredPinnedGames.length}
                   </span>
                 </div>
               </div>
 
               <ul className="profile-content__games-grid">
-                {pinnedGames?.map((game) => (
+                {filteredPinnedGames?.map((game) => (
                   <li key={game.objectId} style={{ listStyle: "none" }}>
                     <UserLibraryGameCard
                       game={game}
@@ -243,7 +253,7 @@ export function LibraryTab({
               </div>
 
               <InfiniteScroll
-                dataLength={libraryGames.length}
+                dataLength={filteredLibraryGames.length}
                 next={onLoadMore}
                 hasMore={hasMoreLibraryGames}
                 loader={null}
@@ -252,7 +262,7 @@ export function LibraryTab({
                 scrollableTarget="scrollableDiv"
               >
                 <ul className="profile-content__games-grid">
-                  {libraryGames?.map((game) => {
+                  {filteredLibraryGames?.map((game) => {
                     return (
                       <li
                         key={`${sortBy}-${game.objectId}`}

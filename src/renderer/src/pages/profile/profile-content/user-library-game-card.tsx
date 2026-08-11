@@ -44,7 +44,22 @@ export function UserLibraryGameCard({
   const [isTooltipHovered, setIsTooltipHovered] = useState(false);
   const [imageError, setImageError] = useState(false);
 
-  const coverImageUrl = game.customLibraryImageUrl ?? game.coverImageUrl;
+  const [fetchedCover, setFetchedCover] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!game.coverImageUrl && game.shop !== "custom") {
+      window.electron
+        .getGameAssets(game.objectId, game.shop)
+        .then((assets) => {
+          if (assets?.coverImageUrl) {
+            setFetchedCover(assets.coverImageUrl);
+          }
+        })
+        .catch(() => {});
+    }
+  }, [game.objectId, game.shop, game.coverImageUrl]);
+
+  const coverImageUrl = game.customLibraryImageUrl ?? game.coverImageUrl ?? fetchedCover;
 
   const isAnimatedCover = isAnimatedCoverCandidate(coverImageUrl);
   const coverPoster = useCoverPoster(coverImageUrl, isAnimatedCover);

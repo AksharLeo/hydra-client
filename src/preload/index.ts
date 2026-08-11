@@ -1084,6 +1084,8 @@ contextBridge.exposeInMainWorld("electron", {
     ipcRenderer.invoke("closeGame", shop, objectId),
   removeGameFromLibrary: (shop: GameShop, objectId: string) =>
     ipcRenderer.invoke("removeGameFromLibrary", shop, objectId),
+  toggleGameVisibility: (shop: GameShop, objectId: string, isHidden: boolean) =>
+    ipcRenderer.invoke("toggleGameVisibility", objectId, shop, isHidden),
   removeGame: (shop: GameShop, objectId: string) =>
     ipcRenderer.invoke("removeGame", shop, objectId),
   deleteGameFolder: (shop: GameShop, objectId: string) =>

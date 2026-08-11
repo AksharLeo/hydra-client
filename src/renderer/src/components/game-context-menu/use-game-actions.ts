@@ -299,6 +299,19 @@ export function useGameActions(game: GameContextMenuGame) {
     }
   };
 
+  const handleToggleVisibility = async (isHidden: boolean) => {
+    try {
+      await window.electron.toggleGameVisibility(
+        game.shop,
+        game.objectId,
+        isHidden
+      );
+      updateLibrary();
+    } catch (error) {
+      logger.error("Failed to toggle visibility", error);
+    }
+  };
+
   const handleOpenDownloadLocation = async () => {
     try {
       await window.electron.openGameInstallerPath(game.shop, game.objectId);
@@ -370,6 +383,7 @@ export function useGameActions(game: GameContextMenuGame) {
     handleOpenDownloadOptions,
     handleOpenDownloadLocation,
     handleTogglePin,
+    handleToggleVisibility,
     handleRemoveFromLibrary,
     handleRemoveFiles,
     handleOpenGameOptions,

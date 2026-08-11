@@ -23,17 +23,18 @@ export function useSearchSuggestions(
   const [suggestions, setSuggestions] = useState<SearchSuggestion[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const library = useAppSelector((state) => state.library.value);
+  const showHiddenGames = useAppSelector((state) => state.library.showHiddenGames);
   const abortControllerRef = useRef<AbortController | null>(null);
   const cacheRef = useRef<Map<string, SearchSuggestion[]>>(new Map());
   const librarySearchIndex = useMemo(
     () =>
       library
-        .filter((game) => Boolean(game.title))
+        .filter((game) => Boolean(game.title) && (showHiddenGames || !game.isHidden))
         .map((game) => ({
           titleLower: game.title.toLowerCase(),
           game,
         })),
-    [library]
+    [library, showHiddenGames]
   );
 
   const getLibrarySuggestions = useCallback(

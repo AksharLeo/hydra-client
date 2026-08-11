@@ -32,6 +32,8 @@ export const BIG_PICTURE_SIDEBAR_LIBRARY_LIST_REGION_ID =
   "big-picture-sidebar-library-list";
 export const BIG_PICTURE_SIDEBAR_LIBRARY_FILTER_ALL_ID =
   "big-picture-sidebar-library-filter-all";
+export const BIG_PICTURE_SIDEBAR_LIBRARY_FILTER_HIDDEN_TOGGLE_ID =
+  "big-picture-sidebar-library-filter-hidden-toggle";
 export const BIG_PICTURE_SIDEBAR_LIBRARY_FILTER_READY_TO_PLAY_ID =
   "big-picture-sidebar-library-filter-ready-to-play";
 export const BIG_PICTURE_SIDEBAR_LIBRARY_FILTER_RECENTLY_PLAYED_ID =

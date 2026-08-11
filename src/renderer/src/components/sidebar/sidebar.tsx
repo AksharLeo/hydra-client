@@ -8,6 +8,8 @@ import { removeDiacritics } from "@shared";
 
 import { ConfirmationModal, TextField } from "@renderer/components";
 import { useDownload, useLibrary, useToast } from "@renderer/hooks";
+import { useAppDispatch, useAppSelector } from "@renderer/hooks/redux";
+import { setShowHiddenGames } from "@renderer/features/library-slice";
 import { routes } from "./routes";
 
 import "./sidebar.scss";
@@ -20,7 +22,7 @@ import {
 import type { LibraryCategory } from "@renderer/pages/library/category-filter";
 import type { SortOption } from "@renderer/pages/library/filter-options";
 
-import { PlayIcon, VideoIcon } from "@primer/octicons-react";
+import { PlayIcon, VideoIcon, EyeIcon, EyeClosedIcon } from "@primer/octicons-react";
 import { Tooltip } from "react-tooltip";
 import deckyIcon from "@renderer/assets/icons/decky.png";
 import cn from "classnames";
@@ -50,6 +52,8 @@ const initialSidebarWidth = window.localStorage.getItem("sidebarWidth");
 export function Sidebar() {
   const { t } = useTranslation(["sidebar", "library"]);
   const { library, updateLibrary } = useLibrary();
+  const showHiddenGames = useAppSelector((state) => state.library.showHiddenGames);
+  const dispatch = useAppDispatch();
   const [deckyPluginInfo, setDeckyPluginInfo] = useState<{
     installed: boolean;
     version: string | null;
@@ -117,6 +121,10 @@ export function Sidebar() {
 
     games = sortLibraryGames(games, sidebarSortBy);
 
+    if (!showHiddenGames) {
+      games = games.filter((game) => !game.isHidden);
+    }
+
     if (showFavoritesFirst) {
       games = [
         ...games.filter((game) => game.favorite),
@@ -131,6 +139,7 @@ export function Sidebar() {
     sidebarSortBy,
     selectedPlatforms,
     showFavoritesFirst,
+    showHiddenGames,
   ]);
 
   const { lastPacket, progress } = useDownload();
@@ -474,7 +483,21 @@ export function Sidebar() {
                 <PlayIcon size={16} />
               </button>
 
+              <button
+                type="button"
+                className={cn("sidebar__play-button", {
+                  "sidebar__play-button--active": showHiddenGames,
+                })}
+                onClick={() => dispatch(setShowHiddenGames(!showHiddenGames))}
+                data-tooltip-id="sidebar-show-hidden-games-tooltip"
+                data-tooltip-content={t("show_hidden_games")}
+                data-tooltip-place="top"
+              >
+                {showHiddenGames ? <EyeIcon size={16} /> : <EyeClosedIcon size={16} />}
+              </button>
+
               <Tooltip id="sidebar-show-playable-only-tooltip" place="top" />
+              <Tooltip id="sidebar-show-hidden-games-tooltip" place="top" />
 
               <SidebarFilterMenu
                 category={sidebarCategory}

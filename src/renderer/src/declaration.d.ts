@@ -467,6 +467,11 @@ declare global {
     ) => Promise<string[]>;
     closeGame: (shop: GameShop, objectId: string) => Promise<boolean>;
     removeGameFromLibrary: (shop: GameShop, objectId: string) => Promise<void>;
+    toggleGameVisibility: (
+      shop: GameShop,
+      objectId: string,
+      isHidden: boolean
+    ) => Promise<void>;
     removeGame: (shop: GameShop, objectId: string) => Promise<void>;
     deleteGameFolder: (shop: GameShop, objectId: string) => Promise<unknown>;
     getGameByObjectId: (

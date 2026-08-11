@@ -17,6 +17,8 @@ import {
   XIcon,
   PinIcon,
   PinSlashIcon,
+  EyeIcon,
+  EyeClosedIcon,
 } from "@primer/octicons-react";
 import SteamLogo from "@renderer/assets/steam-logo.svg?react";
 import {
@@ -102,6 +104,7 @@ export function GameContextMenu({
     rpcs3ConfirmPending,
     handleConfirmRpcs3Launch,
     handleCancelRpcs3Launch,
+    handleToggleVisibility,
   } = useGameActions(game);
   const { isCollectionContextMenuOrModalOpen } = useCollectionContextMenu();
   const selectedCollectionId = searchParams.get("collection");
@@ -321,6 +324,13 @@ export function GameContextMenu({
               <PinIcon size={16} />
             ),
           onClick: onPinToggle ?? handleTogglePin,
+          disabled: isDeleting,
+        },
+        {
+          id: "toggle-visibility",
+          label: game.isHidden ? "Unhide Game" : "Hide Game",
+          icon: game.isHidden ? <EyeIcon size={16} /> : <EyeClosedIcon size={16} />,
+          onClick: () => handleToggleVisibility(!game.isHidden),
           disabled: isDeleting,
         },
         ...(game.executablePath

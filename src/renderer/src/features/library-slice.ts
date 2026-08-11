@@ -6,11 +6,13 @@ import type { LibraryGame } from "@types";
 export interface LibraryState {
   value: LibraryGame[];
   searchQuery: string;
+  showHiddenGames: boolean;
 }
 
 const initialState: LibraryState = {
   value: [],
   searchQuery: "",
+  showHiddenGames: false,
 };
 
 export const librarySlice = createSlice({
@@ -19,6 +21,9 @@ export const librarySlice = createSlice({
   reducers: {
     setLibrary: (state, action: PayloadAction<LibraryState["value"]>) => {
       state.value = action.payload;
+    },
+    setShowHiddenGames: (state, action: PayloadAction<boolean>) => {
+      state.showHiddenGames = action.payload;
     },
 
     updateGameNewDownloadOptions: (
@@ -65,6 +70,7 @@ export const librarySlice = createSlice({
 
 export const {
   setLibrary,
+  setShowHiddenGames,
   updateGameNewDownloadOptions,
   clearNewDownloadOptions,
   setLibrarySearchQuery,

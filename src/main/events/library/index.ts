@@ -46,6 +46,7 @@ import "./toggle-automatic-cloud-sync";
 import "./toggle-game-gamemode";
 import "./toggle-game-mangohud";
 import "./toggle-game-pin";
+import "./toggle-game-visibility";
 import "./update-custom-game";
 import "./update-executable-path";
 import "./update-game-custom-assets";

@@ -105,6 +105,7 @@ export type UserGame = {
   isFavorite: boolean;
   isPinned: boolean;
   pinnedDate?: Date | null;
+  isHidden?: boolean;
   customLibraryImageUrl?: string | null;
   customLibraryHeroImageUrl?: string | null;
   customLogoImageUrl?: string | null;

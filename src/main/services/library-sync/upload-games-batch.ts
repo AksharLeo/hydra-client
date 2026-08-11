@@ -24,11 +24,13 @@ export const uploadGamesBatch = async () => {
       chunk.map((game) => {
         return {
           objectId: game.objectId,
+          title: game.title,
           playTimeInMilliseconds: Math.trunc(game.playTimeInMilliseconds),
           shop: game.shop,
           lastTimePlayed: game.lastTimePlayed,
           isFavorite: game.favorite,
           isPinned: game.isPinned ?? false,
+          isHidden: game.isHidden ?? false,
         };
       })
     ).catch(() => {});

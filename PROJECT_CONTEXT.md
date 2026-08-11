@@ -34,7 +34,7 @@ Fork of the official [Hydra Launcher](https://github.com/hydralauncher/hydra) mo
 - **What**: The subscription check in `validateOptions()` is commented out so all cloud features work without a paid Hydra subscription.
 - **Where**: `src/main/services/hydra-api.ts` (lines ~350-361)
 - **Why**: Self-hosted backend provides these features for free. The official client gates cloud saves, achievements sync, and other features behind a subscription.
-- **Status**: Uncommitted working tree change (the only modification to tracked files).
+- **Status**: Implemented in source code.
 - **Backend relation**: Required — the self-hosted backend always returns `hasActiveSubscription: true` and a fake subscription object.
 
 ### 2. Dynamic Server Configuration (UI)
@@ -76,12 +76,12 @@ Fork of the official [Hydra Launcher](https://github.com/hydralauncher/hydra) mo
 - **Achievement sync end-to-end**: Backend has routes, but full flow with client is untested.
 - **Game artwork cloud sync**: Backend has no artwork storage endpoints.
 
-### Known Issues
+### Important API Contracts
 
-- The auth URL construction adds the `AuthPage` enum value as a path segment and `?lng=<language>` as a query param. The backend must handle wildcard paths under `/auth/page/*`.
-- The client expects `GET /profile/me` (not `/auth/me`) for user data, returning the full `UserDetails` type.
-- Many client API calls go to `/profile/games/*` routes for library management.
-- The client uses the `hydralauncher://` protocol scheme (not `hydra://`) for deep links.
+- **Auth URL**: The client expects the backend to handle wildcard paths under `/auth/page/*` (e.g. appending `AuthPage` enum value and `?lng=`). This is implemented in the backend.
+- **User Profile**: The client expects `GET /profile/me` for user data, returning the exact `UserDetails` type. This is implemented in the backend.
+- **Library Sync**: Many client API calls go to `/profile/games/*` routes for library management.
+- **Deep Links**: The client uses the `hydralauncher://` protocol scheme (not `hydra://`) for deep links.
 
 ## Architecture
 
@@ -130,7 +130,6 @@ Fork of the official [Hydra Launcher](https://github.com/hydralauncher/hydra) mo
 
 ### Known Issues
 
-- Subscription bypass is an uncommitted change — could be lost on reset
 - Some upstream-proxied endpoints may fail if they require upstream auth
 
 ## Important Decisions

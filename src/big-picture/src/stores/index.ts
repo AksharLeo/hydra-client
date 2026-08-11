@@ -7,3 +7,4 @@ export * from "./downloads.store";
 export * from "./running-games.store";
 export * from "./toast.store";
 export * from "./user-details.store";
+export * from "./library-settings.store";

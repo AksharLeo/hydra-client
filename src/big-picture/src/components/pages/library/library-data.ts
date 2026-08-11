@@ -150,14 +150,19 @@ export function filterLibraryByTab(
 }
 
 export function getLibraryFilterCounts(
-  library: LibraryGame[]
+  library: LibraryGame[],
+  showHiddenGames: boolean
 ): LibraryFilterCounts {
+  const visibleLibrary = showHiddenGames 
+    ? library 
+    : library.filter(game => !game.isHidden);
+
   return {
-    all: library.length,
-    moderns: library.filter((game) => game.shop !== "launchbox").length,
-    classics: library.filter((game) => game.shop === "launchbox").length,
-    favorites: library.filter((game) => game.favorite).length,
-    completed: library.filter(isCompletedGame).length,
+    all: visibleLibrary.length,
+    moderns: visibleLibrary.filter((game) => game.shop !== "launchbox").length,
+    classics: visibleLibrary.filter((game) => game.shop === "launchbox").length,
+    favorites: visibleLibrary.filter((game) => game.favorite).length,
+    completed: visibleLibrary.filter(isCompletedGame).length,
   };
 }
 

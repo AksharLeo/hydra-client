@@ -1,7 +1,7 @@
-import { useCallback, useContext } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { userProfileContext } from "@renderer/context";
 import { useTranslation } from "react-i18next";
-import { useFormat, useUserDetails } from "@renderer/hooks";
+import { useFormat, useUserDetails, useLibrary } from "@renderer/hooks";
 import { MAX_MINUTES_TO_SHOW_IN_PLAYTIME } from "@renderer/constants";
 import HydraIcon from "@renderer/assets/icons/hydra.svg?react";
 import { useSubscription } from "@renderer/hooks/use-subscription";
@@ -38,6 +38,17 @@ export function UserStatsBox() {
   const karma = isMe ? userDetails?.karma : userProfile?.karma;
   const hasKarma = karma !== undefined && karma !== null;
 
+  const { library } = useLibrary();
+
+  const localAchievementSum = library.reduce(
+    (acc, game) => acc + (game.isHidden ? 0 : game.unlockedAchievementCount ?? 0),
+    0
+  );
+
+  const displayAchievementSum = isMe
+    ? localAchievementSum
+    : userStats?.unlockedAchievementSum;
+
   return (
     <div className="user-stats__box">
       <ul className="user-stats__list">
@@ -46,10 +57,10 @@ export function UserStatsBox() {
             <h3 className="user-stats__list-title">
               {t("achievements_unlocked")}
             </h3>
-            {userStats.unlockedAchievementSum !== undefined ? (
+            {displayAchievementSum !== undefined ? (
               <div className="user-stats__stats-row">
                 <p className="user-stats__list-description">
-                  <TrophyIcon /> {userStats.unlockedAchievementSum}{" "}
+                  <TrophyIcon /> {displayAchievementSum}{" "}
                   {t("achievements")}
                 </p>
               </div>

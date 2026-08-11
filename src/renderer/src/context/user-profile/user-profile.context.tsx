@@ -1,5 +1,5 @@
 import { darkenColor, ensureArray } from "@renderer/helpers";
-import { useAppSelector, useToast } from "@renderer/hooks";
+import { useAppSelector, useToast, useLibrary } from "@renderer/hooks";
 import type { Badge, UserProfile, UserStats, UserGame } from "@types";
 import { average } from "color.js";
 
@@ -254,6 +254,80 @@ export function UserProfileContextProvider({
     );
     setBadges(ensureArray<Badge>(badges, "/badges"));
   }, [i18n]);
+
+  const { library } = useLibrary();
+
+  useEffect(() => {
+    if (isMe && libraryGames.length > 0) {
+      const localGamesMap = new Map(library.map((g) => [g.objectId, g]));
+
+      setLibraryGames((prev) => {
+        let changed = false;
+        const newGames = prev
+          .map((g) => {
+            const localG = localGamesMap.get(g.objectId);
+            if (!localG) {
+              changed = true;
+              return null;
+            }
+            if (
+              Math.trunc(localG.playTimeInMilliseconds / 1000) !==
+                g.playTimeInSeconds ||
+              localG.isPinned !== g.isPinned ||
+              localG.favorite !== g.isFavorite ||
+              localG.isHidden !== g.isHidden
+            ) {
+              changed = true;
+              return {
+                ...g,
+                playTimeInSeconds: Math.trunc(
+                  localG.playTimeInMilliseconds / 1000
+                ),
+                isPinned: localG.isPinned,
+                isFavorite: localG.favorite,
+                isHidden: localG.isHidden,
+              };
+            }
+            return g;
+          })
+          .filter(Boolean) as UserGame[];
+        return changed ? newGames : prev;
+      });
+
+      setPinnedGames((prev) => {
+        let changed = false;
+        const newGames = prev
+          .map((g) => {
+            const localG = localGamesMap.get(g.objectId);
+            if (!localG) {
+              changed = true;
+              return null;
+            }
+            if (
+              Math.trunc(localG.playTimeInMilliseconds / 1000) !==
+                g.playTimeInSeconds ||
+              localG.isPinned !== g.isPinned ||
+              localG.favorite !== g.isFavorite ||
+              localG.isHidden !== g.isHidden
+            ) {
+              changed = true;
+              return {
+                ...g,
+                playTimeInSeconds: Math.trunc(
+                  localG.playTimeInMilliseconds / 1000
+                ),
+                isPinned: localG.isPinned,
+                isFavorite: localG.favorite,
+                isHidden: localG.isHidden,
+              };
+            }
+            return g;
+          })
+          .filter(Boolean) as UserGame[];
+        return changed ? newGames : prev;
+      });
+    }
+  }, [library, isMe]);
 
   useEffect(() => {
     if (previousUserIdRef.current !== userId) {

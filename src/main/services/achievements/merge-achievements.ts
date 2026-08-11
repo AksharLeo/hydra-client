@@ -54,6 +54,8 @@ export const mergeAchievements = async (
   achievements: UnlockedAchievement[],
   publishNotification: boolean
 ) => {
+  if (game.isHidden) return;
+
   const gameKey = levelKeys.game(game.shop, game.objectId);
 
   let localGameAchievement = AchievementMemoryStore.get(

@@ -10,6 +10,8 @@ import {
   SignOutIcon,
   SquaresFourIcon,
   StarIcon,
+  EyeIcon,
+  EyeClosedIcon,
 } from "@phosphor-icons/react";
 import { AuthPage } from "@shared";
 import {
@@ -52,12 +54,13 @@ import {
 } from "../../stores/downloads.store";
 import type { DownloadProgress, LibraryGame } from "@types";
 import type { FocusNode, FocusOverrides, FocusRegion } from "../../services";
-import { useNavigationSnapshot, useVirtualKeyboardStore } from "../../stores";
+import { useNavigationSnapshot, useVirtualKeyboardStore, useLibrarySettingsStore } from "../../stores";
 import {
   BIG_PICTURE_SIDEBAR_EXIT_ID,
   BIG_PICTURE_SIDEBAR_ITEM_IDS,
   BIG_PICTURE_SIDEBAR_LIBRARY_FILTER_ALL_ID,
   BIG_PICTURE_SIDEBAR_LIBRARY_FILTER_FAVORITES_ID,
+  BIG_PICTURE_SIDEBAR_LIBRARY_FILTER_HIDDEN_TOGGLE_ID,
   BIG_PICTURE_SIDEBAR_LIBRARY_FILTER_READY_TO_PLAY_ID,
   BIG_PICTURE_SIDEBAR_LIBRARY_FILTER_RECENTLY_PLAYED_ID,
   BIG_PICTURE_SIDEBAR_LIBRARY_LIST_REGION_ID,
@@ -281,23 +284,30 @@ function getSidebarLibraryFilterIcon(filter: SidebarLibraryFilter) {
 
 function filterSidebarLibraryGames(
   library: LibraryGame[],
-  selectedFilter: SidebarLibraryFilter
+  selectedFilter: SidebarLibraryFilter,
+  showHiddenGames: boolean
 ) {
+  let games = library;
+  
+  if (!showHiddenGames) {
+    games = games.filter((game) => !game.isHidden);
+  }
+
   if (selectedFilter === "all") {
-    return [...library].sort(compareGamesByTitle);
+    return games.sort(compareGamesByTitle);
   }
 
   if (selectedFilter === "ready_to_play") {
-    return library
+    return games
       .filter(isLibraryGamePlayable)
       .sort(compareGamesByExecutablePathUpdatedAt);
   }
 
   if (selectedFilter === "favorites") {
-    return library.filter((game) => game.favorite).sort(compareGamesByPlaytime);
+    return games.filter((game) => game.favorite).sort(compareGamesByPlaytime);
   }
 
-  return library
+  return games
     .filter((game) => getLastPlayedTimestamp(game) !== null)
     .sort(compareGamesByLastPlayed);
 }
@@ -451,6 +461,8 @@ function SidebarLibrary({
     () => new Set(Object.keys(runningGamesById)),
     [runningGamesById]
   );
+  const showHiddenGames = useLibrarySettingsStore((state) => state.showHiddenGames);
+  const setShowHiddenGames = useLibrarySettingsStore((state) => state.setShowHiddenGames);
   const [selectedLibraryFilter, setSelectedLibraryFilter] =
     useState<SidebarLibraryFilter>("all");
   const normalizedPathname = normalizeBigPicturePathname(pathname);
@@ -469,8 +481,8 @@ function SidebarLibrary({
   }, []);
 
   const sidebarLibrary = useMemo(() => {
-    return filterSidebarLibraryGames(library, selectedLibraryFilter);
-  }, [library, selectedLibraryFilter]);
+    return filterSidebarLibraryGames(library, selectedLibraryFilter, showHiddenGames);
+  }, [library, selectedLibraryFilter, showHiddenGames]);
 
   const { filteredItems, search, setSearch } = useSearch(sidebarLibrary, [
     "title",
@@ -523,7 +535,7 @@ function SidebarLibrary({
           },
       right: nextFilter
         ? getItemFocusTarget(nextFilter.focusId)
-        : contentEntryTarget,
+        : getItemFocusTarget(BIG_PICTURE_SIDEBAR_LIBRARY_FILTER_HIDDEN_TOGGLE_ID),
       up: getItemFocusTarget(BIG_PICTURE_SIDEBAR_LIBRARY_SEARCH_ID),
       down:
         focusId === selectedFilterFocusId
@@ -591,6 +603,31 @@ function SidebarLibrary({
             </button>
           </FocusItem>
         ))}
+        <FocusItem
+          id={BIG_PICTURE_SIDEBAR_LIBRARY_FILTER_HIDDEN_TOGGLE_ID}
+          navigationOverrides={{
+            left: getItemFocusTarget(SIDEBAR_LIBRARY_FILTERS[SIDEBAR_LIBRARY_FILTERS.length - 1].focusId),
+            right: contentEntryTarget,
+            up: getItemFocusTarget(BIG_PICTURE_SIDEBAR_LIBRARY_SEARCH_ID),
+            down: filterDownTarget,
+          }}
+          asChild
+        >
+          <button
+            type="button"
+            className={`sidebar-library-filter ${showHiddenGames ? "sidebar-library-filter--active" : ""}`}
+            aria-label="Show hidden games"
+            aria-pressed={showHiddenGames}
+            onClick={() => setShowHiddenGames(!showHiddenGames)}
+          >
+            <span className="sidebar-library-filter__icon" aria-hidden="true">
+              {showHiddenGames ? <EyeIcon size={24} /> : <EyeClosedIcon size={24} />}
+            </span>
+            <span className="sidebar-library-filter__label">
+              Hidden Games
+            </span>
+          </button>
+        </FocusItem>
       </div>
 
       <div className="library-container__list-focus-region">

@@ -19,6 +19,7 @@ type ProfileGame = {
   hasManuallyUpdatedPlaytime: boolean;
   isFavorite?: boolean;
   isPinned?: boolean;
+  isHidden?: boolean;
   achievementCount: number;
   unlockedAchievementCount: number;
   platform?: string | null;
@@ -146,7 +147,8 @@ const mergeExistingGame = (
   remoteGame: ProfileGame,
   collectionIds: string[],
   remoteAddedToLibraryAt: Date | null,
-  canReconcileCustomArtwork: boolean
+  canReconcileCustomArtwork: boolean,
+  libraryGamesMap?: Map<string, any>
 ): Game => ({
   ...localGame,
   remoteId: remoteGame.id,
@@ -158,9 +160,10 @@ const mergeExistingGame = (
   ),
   favorite: remoteGame.isFavorite ?? localGame.favorite,
   isPinned: remoteGame.isPinned ?? localGame.isPinned,
+  isHidden: remoteGame.isHidden ?? libraryGamesMap?.get(remoteGame.objectId)?.isHidden ?? localGame.isHidden,
   collectionIds,
   achievementCount: remoteGame.achievementCount,
-  unlockedAchievementCount: remoteGame.unlockedAchievementCount,
+  unlockedAchievementCount: remoteGame.unlockedAchievementCount || libraryGamesMap?.get(remoteGame.objectId)?.unlockedAchievementCount || remoteGame.unlockedAchievementCount,
   platform: remoteGame.platform ?? localGame.platform,
   ...(canReconcileCustomArtwork
     ? {
@@ -187,7 +190,8 @@ const mergeExistingGame = (
 const createLocalGame = (
   remoteGame: ProfileGame,
   collectionIds: string[],
-  addedToLibraryAt: Date | null
+  addedToLibraryAt: Date | null,
+  libraryGamesMap?: Map<string, any>
 ): Game => ({
   objectId: remoteGame.objectId,
   title: remoteGame.title,
@@ -203,9 +207,10 @@ const createLocalGame = (
   isDeleted: false,
   favorite: remoteGame.isFavorite ?? false,
   isPinned: remoteGame.isPinned ?? false,
+  isHidden: remoteGame.isHidden ?? libraryGamesMap?.get(remoteGame.objectId)?.isHidden ?? false,
   collectionIds,
   achievementCount: remoteGame.achievementCount,
-  unlockedAchievementCount: remoteGame.unlockedAchievementCount,
+  unlockedAchievementCount: remoteGame.unlockedAchievementCount || libraryGamesMap?.get(remoteGame.objectId)?.unlockedAchievementCount || remoteGame.unlockedAchievementCount,
   platform: remoteGame.platform ?? null,
   customIconUrl: remoteGame.customIconUrl ?? null,
   customLogoImageUrl: remoteGame.customLogoImageUrl ?? null,
@@ -215,7 +220,8 @@ const createLocalGame = (
 
 const mergeRemoteGame = async (
   remoteGame: ProfileGame,
-  canReconcileCustomArtwork: boolean
+  canReconcileCustomArtwork: boolean,
+  libraryGamesMap?: Map<string, any>
 ) => {
   const gameKey = levelKeys.game(remoteGame.shop, remoteGame.objectId);
   const localGame = await gamesSublevel.get(gameKey);
@@ -234,11 +240,17 @@ const mergeRemoteGame = async (
         remoteGame,
         collectionIds,
         remoteAddedToLibraryAt,
-        canReconcileCustomArtwork
+        canReconcileCustomArtwork,
+        libraryGamesMap
       )
-    : createLocalGame(remoteGame, collectionIds, remoteAddedToLibraryAt);
-
+    : createLocalGame(remoteGame, collectionIds, remoteAddedToLibraryAt, libraryGamesMap);
   await gamesSublevel.put(gameKey, mergedGame);
+
+  if (remoteGame.title === "Unknown Game" && localGame?.title && localGame.title !== "Unknown Game") {
+    HydraApi.put(`/profile/games/${remoteGame.shop}/${remoteGame.objectId}`, {
+      title: localGame.title,
+    }).catch(() => {});
+  }
 
   if (canReconcileCustomArtwork) {
     await syncArtworkSelectionWithRemote(gameKey, localGame, remoteGame);
@@ -306,9 +318,35 @@ export const mergeWithRemoteGames = async () => {
   try {
     const canReconcileCustomArtwork =
       HydraApi.isLoggedIn() && HydraApi.hasActiveSubscription();
+      
+    let libraryGamesMap = new Map<string, any>();
+    try {
+      const { db, levelKeys } = await import("@main/level");
+      const user = await db.get<string, any>(levelKeys.user, { valueEncoding: "json" }).catch(() => null);
+      if (user?.id) {
+        let skipLib = 0;
+        const takeLib = 200;
+        while (true) {
+          const page = await HydraApi.get<{ library: any[] }>(
+            `/users/${user.id}/library?take=${takeLib}&skip=${skipLib}`,
+            { needsAuth: false }
+          ).catch(() => null);
+
+          if (!page || !page.library || page.library.length === 0) break;
+          for (const game of page.library) {
+            libraryGamesMap.set(game.objectId, game);
+          }
+          if (page.library.length < takeLib) break;
+          skipLib += takeLib;
+        }
+      }
+    } catch (err) {
+      librarySyncLogger.error("Failed to fetch user library for hidden games", err);
+    }
+
     const remoteGames = await fetchRemoteGames();
     for (const game of remoteGames) {
-      await mergeRemoteGame(game, canReconcileCustomArtwork);
+      await mergeRemoteGame(game, canReconcileCustomArtwork, libraryGamesMap);
     }
   } catch {
     // Keep local library available when remote sync fails.

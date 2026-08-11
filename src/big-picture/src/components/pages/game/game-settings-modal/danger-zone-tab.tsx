@@ -63,6 +63,24 @@ export function GameDangerZoneSettingsTab({
   const [pendingAction, setPendingAction] = useState<DangerAction | null>(null);
   const [actionLoading, setActionLoading] = useState(false);
 
+  const handleToggleVisibility = useCallback(async () => {
+    setActionLoading(true);
+    try {
+      await globalThis.window.electron.toggleGameVisibility(
+        game.shop,
+        game.objectId,
+        !game.isHidden
+      );
+      globalThis.window.dispatchEvent(new Event("library-update"));
+      showSuccessToast(game.isHidden ? "Game unhidden" : "Game hidden");
+      onClose();
+    } catch {
+      showErrorToast("Failed to toggle game visibility");
+    } finally {
+      setActionLoading(false);
+    }
+  }, [game, onClose, showSuccessToast, showErrorToast]);
+
   const handleRemoveFromLibrary = useCallback(async () => {
     setActionLoading(true);
     try {
@@ -141,6 +159,20 @@ export function GameDangerZoneSettingsTab({
           onClick={() => setPendingAction("remove-from-library")}
         >
           {t("remove_from_library")}
+        </Button>
+      </SettingsSection>
+
+      <SettingsSection
+        className="game-danger-zone-settings-tab__section"
+        title={game.isHidden ? "Unhide Game" : "Hide Game"}
+        description={game.isHidden ? "Show this game in your library again." : "Hide this game from your library."}
+      >
+        <Button
+          variant="secondary"
+          className="game-danger-zone-settings-tab__action-button"
+          onClick={handleToggleVisibility}
+        >
+          {game.isHidden ? "Unhide Game" : "Hide Game"}
         </Button>
       </SettingsSection>
 

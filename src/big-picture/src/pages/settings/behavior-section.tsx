@@ -11,6 +11,7 @@ import {
   LANGUAGE_SECTION_BUTTON_ID,
 } from "./settings-navigation";
 import { SettingsSection } from "./settings-section";
+import { useLibrarySettingsStore } from "../../stores/library-settings.store";
 
 interface BehaviorSectionProps {
   className?: string;
@@ -45,6 +46,7 @@ const DEFAULT_FORM: BehaviorForm = {
 
 export function BehaviorSection({ className }: Readonly<BehaviorSectionProps>) {
   const userPreferences = useUserPreferences();
+  const { showHiddenGames, setShowHiddenGames } = useLibrarySettingsStore();
   const [showRunAtStartup, setShowRunAtStartup] = useState(false);
   const [form, setForm] = useState<BehaviorForm>(DEFAULT_FORM);
 
@@ -101,6 +103,14 @@ export function BehaviorSection({ className }: Readonly<BehaviorSectionProps>) {
 
   const items = useMemo<BehaviorItem[]>(() => {
     const baseItems: BehaviorItem[] = [
+      {
+        id: "show-hidden-games",
+        focusId: BEHAVIOR_ITEM_FOCUS_IDS.showHiddenGames,
+        label: "Show hidden games in library",
+        checked: showHiddenGames,
+        disabled: false,
+        onChange: (checked: boolean) => setShowHiddenGames(checked),
+      },
       {
         id: "prefer-quit-instead-of-hiding",
         focusId: BEHAVIOR_ITEM_FOCUS_IDS.preferQuitInsteadOfHiding,
@@ -178,7 +188,7 @@ export function BehaviorSection({ className }: Readonly<BehaviorSectionProps>) {
     ];
 
     return baseItems;
-  }, [form, isLinux, showRunAtStartup]);
+  }, [form, isLinux, showRunAtStartup, showHiddenGames, setShowHiddenGames]);
 
   const navigationOverridesByFocusId = useMemo<
     Record<string, FocusOverrides>

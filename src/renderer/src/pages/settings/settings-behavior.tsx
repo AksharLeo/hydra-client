@@ -2,7 +2,8 @@ import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { CheckboxField, ProtonPathPicker } from "@renderer/components";
-import { useAppSelector } from "@renderer/hooks";
+import { useAppDispatch, useAppSelector } from "@renderer/hooks";
+import { setShowHiddenGames } from "@renderer/features/library-slice";
 import { settingsContext } from "@renderer/context";
 import "./settings-behavior.scss";
 import { QuestionIcon } from "@primer/octicons-react";
@@ -12,6 +13,9 @@ export function SettingsBehavior() {
   const userPreferences = useAppSelector(
     (state) => state.userPreferences.value
   );
+  
+  const showHiddenGames = useAppSelector((state) => state.library.showHiddenGames);
+  const dispatch = useAppDispatch();
 
   const [showRunAtStartup, setShowRunAtStartup] = useState(false);
   const [protonVersions, setProtonVersions] = useState<ProtonVersion[]>([]);
@@ -134,6 +138,12 @@ export function SettingsBehavior() {
             preferQuitInsteadOfHiding: !form.preferQuitInsteadOfHiding,
           })
         }
+      />
+
+      <CheckboxField
+        label={t("show_hidden_games")}
+        checked={showHiddenGames}
+        onChange={() => dispatch(setShowHiddenGames(!showHiddenGames))}
       />
 
       <CheckboxField

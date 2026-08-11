@@ -96,6 +96,7 @@ export const EMULATION_DETAIL_CLOUD_REFRESH_BUTTON_ID =
   "emulation-detail-cloud-refresh";
 
 export const BEHAVIOR_ITEM_FOCUS_IDS = {
+  showHiddenGames: "behavior-show-hidden-games",
   preferQuitInsteadOfHiding: "behavior-prefer-quit-instead-of-hiding",
   hideToTrayOnGameStart: "behavior-hide-to-tray-on-game-start",
   runAtStartup: "behavior-run-at-startup",

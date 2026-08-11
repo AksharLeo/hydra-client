@@ -63,7 +63,7 @@
     align-items: center;
     gap: calc(var(--spacing-unit) * 2);
     width: 100%;
-    overflow: hidden;
+    flex-wrap: wrap;
 
     > .sidebar-library-filter {
       flex-shrink: 0;

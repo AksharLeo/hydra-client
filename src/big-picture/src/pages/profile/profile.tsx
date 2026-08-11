@@ -1610,17 +1610,21 @@ function useProfileGames(
   remoteFavoriteGame: UserGame | null,
   remoteRecentActivityGames: UserGame[]
 ): ProfileGames {
+  const visibleLibrary = useMemo(() => {
+    return library.filter((game) => !game.isHidden);
+  }, [library]);
+
   const localFavoriteGame = useMemo(
-    () => getLocalFavoriteGame(library, isOwnProfile),
-    [isOwnProfile, library]
+    () => getLocalFavoriteGame(visibleLibrary, isOwnProfile),
+    [isOwnProfile, visibleLibrary]
   );
   const remoteFavoriteFallback = useMemo(
     () => getRemoteFavoriteGame(remoteLibraryGames),
     [remoteLibraryGames]
   );
   const localRecentGames = useMemo(
-    () => (isOwnProfile ? getRecentGames(library) : []),
-    [isOwnProfile, library]
+    () => (isOwnProfile ? getRecentGames(visibleLibrary) : []),
+    [isOwnProfile, visibleLibrary]
   );
   const remoteRecentFallback = useMemo(
     () => getRecentGames(remoteLibraryGames),
@@ -1634,7 +1638,7 @@ function useProfileGames(
   );
   const libraryCarouselGames = useMemo(() => {
     const sourceGames = profileUser?.isOwnProfile
-      ? library
+      ? visibleLibrary
       : remoteLibraryGames;
     return sourceGames.map((game) =>
       toProfileLibraryCarouselGame(
@@ -1914,7 +1918,7 @@ function ProfileContent({ userId }: Readonly<ProfileContentProps>) {
       remoteRecentActivityGames
     );
   const totalLibraryGames = profileUser?.isOwnProfile
-    ? library.length
+    ? libraryCarouselGames.length
     : (userStats?.libraryCount ?? remoteLibraryTotalCount);
   const canViewRecentAchievements =
     Boolean(profileUser) && targetHasActiveSubscription;

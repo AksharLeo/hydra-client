@@ -44,7 +44,16 @@ Fork of the official [Hydra Launcher](https://github.com/hydralauncher/hydra) mo
 - **Why**: Allows users to connect to self-hosted backends without editing `.env` files. The backend handles auth, profiles, library sync, and cloud saves. Game catalogue data and static assets still come from the official Hydra infrastructure via the frontend `MAIN_VITE_EXTERNAL_RESOURCES_URL` (or are proxied through the custom backend).
 - **How it works**: When changed, the client signs out, dynamically reconfigures `HydraApi.setupApi()` with the new target URL from LevelDB, and soft-reloads the window.
 
-### 3. Environment Configuration (Default Fallback)
+### 3. Hidden Games Support
+- **What**: Added UI options to toggle the visibility of hidden games in standard and Big Picture modes. Hidden games are marked in the library and hidden from public profiles, but can be viewed by the owner.
+- **Where**: `src/renderer/src/pages/settings/settings-behavior.tsx` and `src/big-picture/src/components/pages/game/game-settings-modal/danger-zone-tab.tsx`.
+- **Backend relation**: Required — the self-hosted backend handles `visibility: 'hidden'` logic.
+
+### 4. Automated Release Workflow
+- **What**: Added a GitHub Actions workflow to automatically build binaries for Linux and Windows and upload them to release tags.
+- **Where**: `.github/workflows/release.yml`
+
+### 5. Environment Configuration (Default Fallback)
 
 - **What**: The `.env` file must still be present and contain the official Hydra URLs. It serves as the baseline fallback for the UI server connection setting (e.g. when "Official Server" is selected, or for downloading assets/catalogue data not covered by the custom backend).
 - **Where**: `.env` (untracked file, not committed)

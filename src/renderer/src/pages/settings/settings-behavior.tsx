@@ -13,8 +13,10 @@ export function SettingsBehavior() {
   const userPreferences = useAppSelector(
     (state) => state.userPreferences.value
   );
-  
-  const showHiddenGames = useAppSelector((state) => state.library.showHiddenGames);
+
+  const showHiddenGames = useAppSelector(
+    (state) => state.library.showHiddenGames
+  );
   const dispatch = useAppDispatch();
 
   const [showRunAtStartup, setShowRunAtStartup] = useState(false);

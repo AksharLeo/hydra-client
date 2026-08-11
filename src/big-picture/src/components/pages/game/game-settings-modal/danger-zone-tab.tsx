@@ -165,7 +165,11 @@ export function GameDangerZoneSettingsTab({
       <SettingsSection
         className="game-danger-zone-settings-tab__section"
         title={game.isHidden ? "Unhide Game" : "Hide Game"}
-        description={game.isHidden ? "Show this game in your library again." : "Hide this game from your library."}
+        description={
+          game.isHidden
+            ? "Show this game in your library again."
+            : "Hide this game from your library."
+        }
       >
         <Button
           variant="secondary"

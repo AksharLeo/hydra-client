@@ -42,10 +42,16 @@ Please, refer to the official Documentation pages: [docs.hydralauncher.gg](https
 ### Local development requirements
 
 - Node.js + Yarn
-- Python 3.9+ with `pip install -r requirements.txt`
+- Python 3.9+ (with `pip install -r requirements.txt`)
 - Rust toolchain (for `hydra-native`)
 
 After installing dependencies, `postinstall` now builds the Rust native addon automatically (`hydra-native/hydra-native.node`).
+
+### Building Binaries
+
+To build the executable binaries for distribution, you must have all requirements installed and run the following commands with increased memory allocation:
+- For Linux: \`NODE_OPTIONS=--max-old-space-size=8192 yarn run build:linux\`
+- For Windows: \`NODE_OPTIONS=--max-old-space-size=8192 yarn run build:win\`
 
 Packaging scripts (`yarn build:win`, `yarn build:mac`, `yarn build:linux`, `yarn build:unpack`) now run `yarn build:python-rpc` automatically.
 

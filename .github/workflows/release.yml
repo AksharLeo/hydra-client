@@ -30,7 +30,8 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update
-          sudo apt-get install -y rpm snapcraft
+          sudo apt-get install -y rpm
+          sudo snap install snapcraft --classic
 
       - name: Set Package Version
         shell: bash

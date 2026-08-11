@@ -625,6 +625,7 @@ export class WindowManager {
         url.startsWith("hydraselfhosted://auth") ||
         url.startsWith("hydralauncher://auth")
       ) {
+        _event.preventDefault();
         closeWindow();
 
         HydraApi.handleExternalAuth(url);
@@ -635,6 +636,7 @@ export class WindowManager {
         url.startsWith("hydraselfhosted://update-account") ||
         url.startsWith("hydralauncher://update-account")
       ) {
+        _event.preventDefault();
         closeWindow();
 
         WindowManager.sendToAppWindows("on-account-updated");

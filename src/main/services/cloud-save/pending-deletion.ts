@@ -64,6 +64,21 @@ export const markCloudSaveRemoteDeletionStarted = async (
   objectId: string,
   shop: GameShop
 ) => {
+  const key = await getStorageKey(objectId, shop);
+  const current = resolveCloudSavePendingDeletionPhase(
+    await cloudSavePendingDeletionsSublevel.get(key)
+  );
+
+  if (current === "remote-started") {
+    return;
+  }
+
+  if (current !== "prepared") {
+    throw new Error(
+      `Cannot advance cloud save pending deletion from ${current} to remote-started`
+    );
+  }
+
   const state: StoredCloudSavePendingDeletion = {
     schemaVersion: 1,
     phase: "remote-started",

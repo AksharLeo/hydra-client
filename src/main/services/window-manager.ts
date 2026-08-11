@@ -625,6 +625,7 @@ export class WindowManager {
         url.startsWith("hydraselfhosted://auth") ||
         url.startsWith("hydralauncher://auth")
       ) {
+        _event.preventDefault();
         closeWindow();
 
         HydraApi.handleExternalAuth(url);
@@ -635,6 +636,7 @@ export class WindowManager {
         url.startsWith("hydraselfhosted://update-account") ||
         url.startsWith("hydralauncher://update-account")
       ) {
+        _event.preventDefault();
         closeWindow();
 
         WindowManager.sendToAppWindows("on-account-updated");
@@ -660,7 +662,7 @@ export class WindowManager {
         valueEncoding: "json",
       })) as any;
       if (prefs?.serverType === "local") {
-        authBaseUrl = "http://localhost:3001/auth/page";
+        authBaseUrl = "http://127.0.0.1:3001/auth/page";
       } else if (prefs?.serverType === "custom" && prefs?.customBackendUrl) {
         authBaseUrl = `${prefs.customBackendUrl}/auth/page`;
       }

@@ -156,7 +156,7 @@ export class HydraApi {
       })) as any;
 
       if (prefs?.serverType === "local") {
-        baseURL = "http://localhost:3001";
+        baseURL = "http://127.0.0.1:3001";
       } else if (prefs?.serverType === "custom" && prefs?.customBackendUrl) {
         baseURL = prefs.customBackendUrl;
       }

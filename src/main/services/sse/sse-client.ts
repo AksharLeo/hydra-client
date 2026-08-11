@@ -39,8 +39,17 @@ const dispatchEvent = async (
 };
 
 const client = new RealtimeWebSocketClient({
-  mintToken: (signal) =>
-    HydraApi.post<RealtimeToken>("/auth/realtime", undefined, { signal }),
+  mintToken: async (signal) => {
+    const res = await HydraApi.post<RealtimeToken>(
+      "/auth/realtime",
+      undefined,
+      { signal }
+    );
+    if (HydraApi.baseUrl) {
+      res.url = HydraApi.baseUrl.replace(/^http/, "ws") + "/realtime";
+    }
+    return res;
+  },
   onEvent: dispatchEvent,
   onReconnect: (signal) => {
     void resyncAfterReconnect(signal).catch((error) =>

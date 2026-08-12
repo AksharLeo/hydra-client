@@ -1,6 +1,6 @@
 {
   "name": "hydra-selfhosted-client",
-  "version": "4.1.1",
+  "version": "4.1.1-beta.1",
   "description": "Hydra Self-Hosted Client",
   "main": "./out/main/index.js",
   "author": "AksharLeo",

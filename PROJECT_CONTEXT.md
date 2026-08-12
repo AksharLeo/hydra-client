@@ -23,7 +23,7 @@ Fork of the official [Hydra Launcher](https://github.com/hydralauncher/hydra) mo
 ## Hydra Upstream
 
 - **Upstream repo**: `https://github.com/hydralauncher/hydra`
-- **Upstream version at fork point**: v4.0.6 (latest as of fork, commit `ebfe3bd14`)
+- **Latest synced upstream version**: v4.1.1
 - **Relationship**: The custom fork occasionally pulls updates from the official upstream repository. `official-main` is synchronized with `upstream/main`, which is then merged into `develop`.
 
 ## Custom Modifications
@@ -49,18 +49,18 @@ Fork of the official [Hydra Launcher](https://github.com/hydralauncher/hydra) mo
 - **Where**: `src/renderer/src/pages/settings/settings-behavior.tsx` and `src/big-picture/src/components/pages/game/game-settings-modal/danger-zone-tab.tsx`.
 - **Backend relation**: Required — the self-hosted backend handles `visibility: 'hidden'` logic.
 
-### 5. Automated Release Workflow
+### 4. Automated Release Workflow
 
 - **What**: Added a GitHub Actions workflow to automatically build binaries for Linux and Windows and upload them to release tags. The `snap` build target was explicitly removed to bypass hardcoded Ubuntu SnapStore publishing crashes when building on custom forks without credentials.
 - **Where**: `.github/workflows/release.yml` and `electron-builder.yml`
 
-### 6. App Rebranding (Conflict Prevention)
+### 5. App Rebranding (Conflict Prevention)
 
 - **What**: The app's name, display name, protocol scheme, and Application User Model ID have been completely changed to **Hydra Self-Hosted** to prevent overlap with the official Hydra launcher.
 - **Where**: `package.json`, `electron-builder.yml`, `src/main/index.ts`, etc.
 - **Why**: Allows users to run both the official client and this self-hosted fork simultaneously on the same machine without shared state conflicts (different AppData folders).
 
-### 7. Environment Configuration (Default Fallback)
+### 6. Environment Configuration (Default Fallback)
 
 - **What**: The `.env` file must still be present and contain the official Hydra URLs. It serves as the baseline fallback for the UI server connection setting (e.g. when "Official Server" is selected, or for downloading assets/catalogue data not covered by the custom backend).
 - **Where**: `.env` (untracked file, not committed)
@@ -72,13 +72,13 @@ Fork of the official [Hydra Launcher](https://github.com/hydralauncher/hydra) mo
   - `RENDERER_VITE_EXTERNAL_RESOURCES_URL=https://assets.hydralauncher.gg`
   - `MAIN_VITE_WS_URL=wss://ws.hydralauncher.gg`
 
-### 8. Cloud Save Idempotency Patch
+### 7. Cloud Save Idempotency Patch
 
 - **What**: Patched `markCloudSaveRemoteDeletionStarted` to be explicitly idempotent.
 - **Where**: `src/main/services/cloud-save/pending-deletion.ts`
 - **Why**: The official client would crash if a cloud save deletion failed mid-flight (e.g. 404 error) and left the LevelDB state in `"remote-started"`, permanently bricking cloud saves for that game. The client now intelligently resumes deletion.
 
-### 9. WebSocket IPv6 Bypass
+### 8. WebSocket IPv6 Bypass
 
 - **What**: The client dynamically derives the WebSocket URL straight from the base API URL instead of trusting the backend's provided URL.
 - **Where**: `src/main/services/sse/sse-client.ts`

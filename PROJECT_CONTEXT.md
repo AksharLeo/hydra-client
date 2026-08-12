@@ -9,23 +9,22 @@ Fork of the official [Hydra Launcher](https://github.com/hydralauncher/hydra) mo
 ## Repository
 
 - **Current branch**: `develop`
-- **Local branches**: `develop` (only)
+- **Local branches**: `develop`, `main`, `upstream-main`
 - **Remotes**:
   - `origin` → `https://github.com/AksharLeo/hydra-client.git` (fetch and push)
   - `upstream` → `https://github.com/hydralauncher/hydra.git` (fetch and push)
-- **HEAD**: `develop` tracks `origin/develop` and `upstream/main`
 
 ### Branch Strategy
 
-- `develop` is the working branch for self-hosted modifications.
-- `main` exists locally and points to the same commit as `upstream/main`.
-- Upstream updates can be pulled via `git fetch upstream` and merged into `develop`.
+- `upstream-main` acts as a pure mirror of the official `hydralauncher/hydra` repository's `main` branch.
+- `develop` is the working branch for self-hosted modifications. Upstream updates are merged from `upstream-main` into `develop`.
+- `main` is the production/release branch for this fork. Changes from `develop` are eventually merged into `main`.
 
 ## Hydra Upstream
 
 - **Upstream repo**: `https://github.com/hydralauncher/hydra`
 - **Upstream version at fork point**: v4.0.6 (latest as of fork, commit `ebfe3bd14`)
-- **Relationship**: `develop` was branched from `upstream/main` at the same commit. No divergent local commits have been made yet — only uncommitted working tree changes exist.
+- **Relationship**: The custom fork occasionally pulls updates from the official upstream repository. `upstream-main` is synchronized with `upstream/main`, which is then merged into `develop`.
 
 ## Custom Modifications
 
